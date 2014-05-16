@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="storage_location">
+        <item>intern</item>
+        <item>extern</item>
+    </string-array>
+
+</resources>

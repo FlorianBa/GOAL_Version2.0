@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GOAL</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="API_KEY">AIzaSyBPvolmSGqhospnq3LZDq0eznL6Y2oYbd4</string>
+
+    <color name="transparent">#ff000000</color>
+    <color name="red">#ff0000</color>
+    <color name="gray">#bebebe</color>
+
+    <string name="title_activity_start">GOAL</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+</resources>

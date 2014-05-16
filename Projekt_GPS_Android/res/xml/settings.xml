@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Settings" >
+        <ListPreference
+            android:defaultValue="intern"
+            android:entries="@array/storage_location"
+            android:entryValues="@array/storage_location"
+            android:key="saving"
+            android:title="Storage Location" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ToggleButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/button"
+    android:textOff="REC."
+    android:textOn="REC."
+    android:background="@drawable/toggle_color"/>
