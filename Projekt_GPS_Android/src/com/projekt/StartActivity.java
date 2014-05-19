@@ -20,23 +20,6 @@ public class StartActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
-
-		ArrayList<StorageInfo> listStorage = (ArrayList<StorageInfo>) StorageUtils.getStorageList();
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		// Test if "extern" in Settings was selected before SD-Card is removed  
-		int storageCounter = 0;
-		for(@SuppressWarnings("unused") StorageInfo info: listStorage){
-			storageCounter++;
-		}
-		if(storageCounter == 1){
-			// if "extern" but no SD-Card available, "intern" will be select
-			if(pref.getString(KEY_LISTPREF, "kein Wert").equals("extern")){
-				SharedPreferences.Editor editor = pref.edit();
-				editor.putString(KEY_LISTPREF, "intern");
-				editor.commit();
-			}
-		}
 		
 		Button startButton = (Button)findViewById(R.id.button_start);
 		Button settingsButton = (Button)findViewById(R.id.button_settings);
@@ -60,7 +43,23 @@ public class StartActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onStart(){
 		super.onStart();
+		ArrayList<StorageInfo> listStorage = (ArrayList<StorageInfo>) StorageUtils.getStorageList();
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		// Test if "extern" in Settings was selected before SD-Card is removed  
+		int storageCounter = 0;
+		for(@SuppressWarnings("unused") StorageInfo info: listStorage){
+			storageCounter++;
+		}
+		if(storageCounter == 1){
+			// if "extern" but no SD-Card available, "intern" will be select
+			if(pref.getString(KEY_LISTPREF, "kein Wert").equals("extern")){
+				SharedPreferences.Editor editor = pref.edit();
+				editor.putString(KEY_LISTPREF, "intern");
+				editor.commit();
+			}
+		}
+		
 		String storedPreference = pref.getString(KEY_LISTPREF, "intern");
 		
 		if(storedPreference.compareTo("intern") == 0){
