@@ -114,6 +114,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 			Toast.makeText(this, "Start Saving", Toast.LENGTH_LONG).show();
 			isRecPressed = true;
 			// Hier kann ein Flag im Service gesetzt werden, um Daten zu speichern
+			
+			testappforKMLandCSV.createReports();
 		}
 		else{
 			Toast.makeText(this, "Stop Saving", Toast.LENGTH_LONG).show();

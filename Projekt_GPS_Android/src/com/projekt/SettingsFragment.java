@@ -44,9 +44,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			if(sharedPref.getString(KEY_LISTPREF, "kein Wert").equals("extern")){
 				listpref.setSummary("intern");
 				listpref.setValueIndex(0);
-				SharedPreferences.Editor editor = sharedPref.edit();
-				editor.putString(KEY_LISTPREF, "intern");
-				editor.commit();
 			}
 		}
 	}

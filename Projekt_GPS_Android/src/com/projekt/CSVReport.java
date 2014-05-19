@@ -5,45 +5,43 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+
 import android.os.Environment;
 
-public class CSV {
-	
-	private static boolean extStorage = false;
-	public static final String folderPath = "/goal_reports";
-	public static final String csvFilePath = "/csv_report.csv";
-	public static final String extStoragePath = "/storage/extSdCard";
+public class CSVReport extends Report {
 
-	public static void setExtStorage(boolean state){
-		extStorage = state;
-	}
-		
-	public static void createCSVReport(List<GraphViewData> listAccX, List<GraphViewData> listAccY,
-			List<GraphViewData> listAccZ, List<GraphViewData> listrpm1,
-			List<GraphViewData> listrpm2, List<GraphViewData> listrpm3,
-			List<GraphViewData> listrpm4, List<GraphViewData> listAngleX,
-			List<GraphViewData> listAngleY, List<GraphViewData> listAngleZ)
+	public static void createCSVReport(List<GraphViewData> listAccX,
+			List<GraphViewData> listAccY, List<GraphViewData> listAccZ,
+			List<GraphViewData> listrpm1, List<GraphViewData> listrpm2,
+			List<GraphViewData> listrpm3, List<GraphViewData> listrpm4,
+			List<GraphViewData> listAngleX, List<GraphViewData> listAngleY,
+			List<GraphViewData> listAngleZ, List<LatLng> listCoo)
 			throws IOException {
 
 		FileWriter fw;
-		
-		if(!extStorage){
-			File csvFolderInt = new File(Environment.getExternalStorageDirectory() + folderPath);
-			if(!csvFolderInt.exists()){
-				csvFolderInt.mkdir();	
+
+		if (!extStorageState) {
+			File csvFolderInt = new File(
+					Environment.getExternalStorageDirectory() + folderPath);
+			if (!csvFolderInt.exists()) {
+				csvFolderInt.mkdir();
 			}
-			fw = new FileWriter(Environment.getExternalStorageDirectory() + folderPath + csvFilePath);
-		}else{
+			fw = new FileWriter(Environment.getExternalStorageDirectory()
+					+ folderPath + csvFilePath + getDate() + csvFileEnding);
+		} else {
 			File csvFolderInt = new File(extStoragePath + folderPath);
-			if(!csvFolderInt.exists()){
-				csvFolderInt.mkdir();	
+			if (!csvFolderInt.exists()) {
+				csvFolderInt.mkdir();
 			}
-			fw = new FileWriter(extStoragePath + folderPath + csvFilePath);
+			fw = new FileWriter(extStoragePath + folderPath + csvFilePath
+					+ getDate() + csvFileEnding);
 		}
-		
+
 		PrintWriter out = new PrintWriter(fw);
-		
+
 		out.print("time");
 		out.print(",");
 		for (GraphViewData data : listAccX) {
@@ -118,6 +116,20 @@ public class CSV {
 		out.print(",");
 		for (GraphViewData data : listAngleZ) {
 			out.print(data.getY());
+			out.print(",");
+		}
+		out.println("");
+		out.print("latitude");
+		out.print(",");
+		for (LatLng data : listCoo) {
+			out.print(data.latitude);
+			out.print(",");
+		}
+		out.println("");
+		out.print("longitude");
+		out.print(",");
+		for (LatLng data : listCoo) {
+			out.print(data.longitude);
 			out.print(",");
 		}
 
