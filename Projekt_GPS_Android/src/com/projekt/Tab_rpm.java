@@ -63,7 +63,6 @@ public class Tab_rpm extends Fragment {
 
 		switch(id){
 		case R.id.graph_rpm_1: 
-			if(mTimer1 == null){
 				mTimer1 = new Runnable() {
 					@Override
 					public void run() {
@@ -77,11 +76,9 @@ public class Tab_rpm extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimer1, delayThread);
-			}
 			break;
 
 		case R.id.graph_rpm_2: 
-			if(mTimer2 == null){
 				mTimer2 = new Runnable() {
 					@Override
 					public void run() {
@@ -95,11 +92,9 @@ public class Tab_rpm extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimer2, delayThread);
-			}
 			break;
 
 		case R.id.graph_rpm_3: 
-			if(mTimer3 == null){
 				mTimer3 = new Runnable() {
 					@Override
 					public void run() {
@@ -113,11 +108,9 @@ public class Tab_rpm extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimer3, delayThread);
-			}
 			break;
 
 		case R.id.graph_rpm_4: 
-			if(mTimer4 == null){
 				mTimer4 = new Runnable() {
 					@Override
 					public void run() {
@@ -131,7 +124,6 @@ public class Tab_rpm extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimer4, delayThread);
-			}
 			break;
 
 		}

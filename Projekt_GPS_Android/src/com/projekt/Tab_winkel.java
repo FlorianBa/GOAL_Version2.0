@@ -61,7 +61,6 @@ public class Tab_winkel extends Fragment {
 
 		switch(id){
 		case R.id.graph_angle_x: 
-			if(mTimerX == null){
 				mTimerX = new Runnable() {
 					@Override
 					public void run() {
@@ -75,11 +74,9 @@ public class Tab_winkel extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerX, delayThread);
-			}
 			break;
 
 		case R.id.graph_angle_y: 
-			if(mTimerY == null){
 				mTimerY = new Runnable() {
 					@Override
 					public void run() {
@@ -93,11 +90,9 @@ public class Tab_winkel extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerY, delayThread);
-			}
 			break;
 
 		case R.id.graph_angle_z: 
-			if(mTimerZ == null){
 				mTimerZ = new Runnable() {
 					@Override
 					public void run() {
@@ -111,7 +106,6 @@ public class Tab_winkel extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerZ, delayThread);
-			}
 			break;
 		}
 	}

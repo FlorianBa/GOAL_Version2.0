@@ -73,7 +73,6 @@ public class Tab_all extends Fragment {
 
 		switch(id){
 		case R.id.graph_all_acc: 
-			if(mTimerAcc == null){
 				mTimerAcc= new Runnable() {
 					@Override
 					public void run() {
@@ -93,11 +92,9 @@ public class Tab_all extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerAcc, delayThread);
-			}
 			break;
 
 		case R.id.graph_all_angle: 
-			if(mTimerAngle == null){
 				mTimerAngle= new Runnable() {
 					@Override
 					public void run() {
@@ -117,11 +114,9 @@ public class Tab_all extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerAngle, delayThread);
-			}
 			break;
 
 		case R.id.graph_all_rpm: 
-			if(mTimerRPM == null){
 				mTimerRPM= new Runnable() {
 					@Override
 					public void run() {
@@ -143,7 +138,6 @@ public class Tab_all extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerRPM, delayThread);
-			}
 			break;
 
 

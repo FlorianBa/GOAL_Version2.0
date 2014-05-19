@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class Tab_acc extends Fragment {
 
 		return fragmentView;
 	}
-	//1234
+
 	public void onStart(){
 		super.onStart();
 
@@ -60,13 +61,13 @@ public class Tab_acc extends Fragment {
 
 		switch(id){
 		case R.id.graph_acc_x: 
-			if(mTimerX == null){
 				mTimerX = new Runnable() {
 					@Override
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
+								GraphViewData data = GenerateTestData.getSinusData();
 								series_x.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -74,35 +75,33 @@ public class Tab_acc extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerX, delayThread);
-			}
 			break;
 
 		case R.id.graph_acc_y: 
-			if(mTimerY == null){
 				mTimerY = new Runnable() {
 					@Override
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
+								GraphViewData data = GenerateTestData.getCosinusData();
 								series_y.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
 						}
 					}
 				};
-				mHandler.postDelayed(mTimerY, delayThread);
-			}
+				mHandler.postDelayed(mTimerY, delayThread);			
 			break;
 
 		case R.id.graph_acc_z: 
-			if(mTimerZ == null){
 				mTimerZ = new Runnable() {
 					@Override
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data =((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
+								//GraphViewData data =((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
+								GraphViewData data = GenerateTestData.getSinusData();
 								series_z.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -110,7 +109,6 @@ public class Tab_acc extends Fragment {
 					}
 				};
 				mHandler.postDelayed(mTimerZ, delayThread);
-			}
 			break;
 		}
 	}
