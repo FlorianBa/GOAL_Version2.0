@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,7 @@ public class Tab_acc extends Fragment {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
 								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
-								GraphViewData data = GenerateTestData.getSinusData();
+								GraphViewData data = GenerateTestData.getSinusData6();
 								series_x.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -84,7 +83,7 @@ public class Tab_acc extends Fragment {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
 								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
-								GraphViewData data = GenerateTestData.getCosinusData();
+								GraphViewData data = GenerateTestData.getCosinusData6();
 								series_y.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -101,7 +100,7 @@ public class Tab_acc extends Fragment {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
 								//GraphViewData data =((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
-								GraphViewData data = GenerateTestData.getSinusData();
+								GraphViewData data = GenerateTestData.getRandomData8();
 								series_z.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);

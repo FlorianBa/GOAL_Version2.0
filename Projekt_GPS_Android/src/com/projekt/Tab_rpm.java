@@ -68,7 +68,9 @@ public class Tab_rpm extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
+								GraphViewData data = GenerateTestData.getRandomData5();
+																
 								series_rpm1.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -84,7 +86,9 @@ public class Tab_rpm extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
+								GraphViewData data = GenerateTestData.getCosinusData4();
+								
 								series_rpm2.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -100,7 +104,9 @@ public class Tab_rpm extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
+								GraphViewData data = GenerateTestData.getRandomData6();
+								
 								series_rpm3.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);
@@ -116,7 +122,9 @@ public class Tab_rpm extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
+								//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
+								GraphViewData data = GenerateTestData.getSinusData4();
+								
 								series_rpm4.appendData(data, scrollToEnd, graphDataBuffer);
 							}
 							mHandler.postDelayed(this, refreshRate);

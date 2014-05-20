@@ -66,7 +66,9 @@ public class Tab_winkel extends Fragment {
 					public void run() {
 						if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
-							GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();			
+							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
+							GraphViewData data = GenerateTestData.getSinusData5();
+							
 							series_x.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
@@ -82,7 +84,9 @@ public class Tab_winkel extends Fragment {
 					public void run() {
 						if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
-							GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();						
+							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
+							GraphViewData data = GenerateTestData.getCosinusData5();
+							
 							series_y.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
@@ -98,7 +102,9 @@ public class Tab_winkel extends Fragment {
 					public void run() {
 						if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
-							GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();						
+							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();	
+							GraphViewData data = GenerateTestData.getRandomData7();
+							
 							series_z.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);

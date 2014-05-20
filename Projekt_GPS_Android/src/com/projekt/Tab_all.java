@@ -78,10 +78,14 @@ public class Tab_all extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
-								GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
-								GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
+								//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
+								//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
+								//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
 
+								GraphViewData dataX = GenerateTestData.getSinusData1();
+								GraphViewData dataY = GenerateTestData.getCosinusData1();
+								GraphViewData dataZ = GenerateTestData.getRandomData1();
+								
 								series_acc_x.appendData(dataX, scrollToEnd, graphDataBuffer);
 								series_acc_y.appendData(dataY, scrollToEnd, graphDataBuffer);
 								series_acc_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
@@ -100,10 +104,14 @@ public class Tab_all extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
-								GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
-								GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();
+								//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
+								//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
+								//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();
 
+								GraphViewData dataY = GenerateTestData.getSinusData2();
+								GraphViewData dataZ = GenerateTestData.getCosinusData2();
+								GraphViewData dataX = GenerateTestData.getRandomData2();
+								
 								series_angle_x.appendData(dataX, scrollToEnd, graphDataBuffer);
 								series_angle_y.appendData(dataY, scrollToEnd, graphDataBuffer);
 								series_angle_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
@@ -122,11 +130,16 @@ public class Tab_all extends Fragment {
 					public void run() {
 						if(isFragAlive){
 							if(((MainActivity)getActivity()).tcpService != null) {
-								GraphViewData data1 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
-								GraphViewData data2 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
-								GraphViewData data3 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
-								GraphViewData data4 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
+								//GraphViewData data1 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
+								//GraphViewData data2 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
+								//GraphViewData data3 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
+								//GraphViewData data4 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
 
+								GraphViewData data1 = GenerateTestData.getSinusData3();
+								GraphViewData data2 = GenerateTestData.getCosinusData3();
+								GraphViewData data3 = GenerateTestData.getRandomData3();
+								GraphViewData data4 = GenerateTestData.getRandomData4();
+								
 								series_rpm_1.appendData(data1, scrollToEnd, graphDataBuffer);
 								series_rpm_2.appendData(data2, scrollToEnd, graphDataBuffer);
 								series_rpm_3.appendData(data3, scrollToEnd, graphDataBuffer);
