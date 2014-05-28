@@ -126,7 +126,9 @@ public class FileChooserActivity extends ListActivity {
 						
 						Intent i = new Intent();
 						i.setClass(con, MainActivity.class);
+						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Remove Activity from Backstack
 						i.putExtra("File", file.getName());
+						i.putExtra("AbsolutFile", filePath);
 						startActivity(i);
 
 					}
