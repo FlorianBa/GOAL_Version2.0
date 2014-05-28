@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ToggleButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="center"
-    android:id="@+id/button"
-    android:textOff="REC."
-    android:textOn="REC."
-    android:background="@drawable/toggle_color"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp" >
+
+    <ToggleButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/toggle_color"
+        android:textOff="REC."
+        android:textOn="REC." />
+
+    <TextView
+        android:id="@+id/textView_actionbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/button"
+		android:layout_marginLeft="15dp"
+		android:textSize="20sp"
+        android:textColor="#ffffff"/>
+
+</RelativeLayout>

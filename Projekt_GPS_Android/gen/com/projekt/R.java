@@ -222,47 +222,53 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f020017;
         public static final int hintergrund=0x7f020018;
         public static final int ic_action_previous_item=0x7f020019;
-        public static final int ic_launcher=0x7f02001a;
-        public static final int ic_plusone_medium_off_client=0x7f02001b;
-        public static final int ic_plusone_small_off_client=0x7f02001c;
-        public static final int ic_plusone_standard_off_client=0x7f02001d;
-        public static final int ic_plusone_tall_off_client=0x7f02001e;
-        public static final int icon_thi=0x7f02001f;
-        public static final int state_false=0x7f020020;
-        public static final int state_true=0x7f020021;
-        public static final int thi_schriftzug=0x7f020022;
-        public static final int toggle_color=0x7f020023;
+        public static final int ic_action_search=0x7f02001a;
+        public static final int ic_launcher=0x7f02001b;
+        public static final int ic_plusone_medium_off_client=0x7f02001c;
+        public static final int ic_plusone_small_off_client=0x7f02001d;
+        public static final int ic_plusone_standard_off_client=0x7f02001e;
+        public static final int ic_plusone_tall_off_client=0x7f02001f;
+        public static final int icon_thi=0x7f020020;
+        public static final int state_false=0x7f020021;
+        public static final int state_true=0x7f020022;
+        public static final int thi_schriftzug=0x7f020023;
+        public static final int toggle_color=0x7f020024;
     }
     public static final class id {
-        public static final int action_settings=0x7f06001c;
+        public static final int action_settings=0x7f060021;
         public static final int button=0x7f060009;
-        public static final int button_settings=0x7f06000d;
-        public static final int button_start=0x7f06000c;
-        public static final int dummyTest=0x7f060012;
+        public static final int button_settings=0x7f06000f;
+        public static final int button_start=0x7f06000e;
+        public static final int continue_measurement=0x7f060020;
+        public static final int dummyTest=0x7f060014;
         public static final int dummy_acc=0x7f060008;
-        public static final int dummy_angle=0x7f06001b;
-        public static final int fragment_container=0x7f06000a;
+        public static final int dummy_angle=0x7f06001e;
+        public static final int fragment_container=0x7f06000c;
         public static final int graph_acc_x=0x7f060005;
         public static final int graph_acc_y=0x7f060006;
         public static final int graph_acc_z=0x7f060007;
-        public static final int graph_all_acc=0x7f06000e;
-        public static final int graph_all_angle=0x7f06000f;
-        public static final int graph_all_gps=0x7f060011;
-        public static final int graph_all_rpm=0x7f060010;
-        public static final int graph_angle_x=0x7f060018;
-        public static final int graph_angle_y=0x7f060019;
-        public static final int graph_angle_z=0x7f06001a;
-        public static final int graph_rpm_1=0x7f060014;
-        public static final int graph_rpm_2=0x7f060015;
-        public static final int graph_rpm_3=0x7f060016;
-        public static final int graph_rpm_4=0x7f060017;
+        public static final int graph_all_acc=0x7f060010;
+        public static final int graph_all_angle=0x7f060011;
+        public static final int graph_all_gps=0x7f060013;
+        public static final int graph_all_rpm=0x7f060012;
+        public static final int graph_angle_x=0x7f06001b;
+        public static final int graph_angle_y=0x7f06001c;
+        public static final int graph_angle_z=0x7f06001d;
+        public static final int graph_rpm_1=0x7f060017;
+        public static final int graph_rpm_2=0x7f060018;
+        public static final int graph_rpm_3=0x7f060019;
+        public static final int graph_rpm_4=0x7f06001a;
         public static final int hybrid=0x7f060004;
-        public static final int map=0x7f060013;
+        public static final int load_file=0x7f06001f;
+        public static final int map=0x7f060015;
         public static final int none=0x7f060000;
         public static final int normal=0x7f060001;
+        public static final int path=0x7f06000b;
+        public static final int rowtext=0x7f060016;
         public static final int satellite=0x7f060002;
-        public static final int settings_fragment=0x7f06000b;
+        public static final int settings_fragment=0x7f06000d;
         public static final int terrain=0x7f060003;
+        public static final int textView_actionbar=0x7f06000a;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;
@@ -270,18 +276,21 @@ containing a value of this type.
     public static final class layout {
         public static final int acc_frag=0x7f030000;
         public static final int actionbar_button=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int activity_settings=0x7f030003;
-        public static final int activity_start=0x7f030004;
-        public static final int all_frag=0x7f030005;
-        public static final int gps_frag=0x7f030006;
-        public static final int rpm_frag=0x7f030007;
-        public static final int winkel_frag=0x7f030008;
+        public static final int activity_file_chooser=0x7f030002;
+        public static final int activity_main=0x7f030003;
+        public static final int activity_settings=0x7f030004;
+        public static final int activity_start=0x7f030005;
+        public static final int all_frag=0x7f030006;
+        public static final int gps_frag=0x7f030007;
+        public static final int row=0x7f030008;
+        public static final int rpm_frag=0x7f030009;
+        public static final int winkel_frag=0x7f03000a;
     }
     public static final class menu {
-        public static final int main=0x7f0c0000;
-        public static final int settings=0x7f0c0001;
-        public static final int start=0x7f0c0002;
+        public static final int actionbar_items=0x7f0c0000;
+        public static final int file_chooser=0x7f0c0001;
+        public static final int settings=0x7f0c0002;
+        public static final int start=0x7f0c0003;
     }
     public static final class string {
         public static final int API_KEY=0x7f07001e;
@@ -385,6 +394,7 @@ containing a value of this type.
         /**  Location client code resources (prefix with location_client) 
          */
         public static final int location_client_powered_by_google=0x7f07001a;
+        public static final int title_activity_file_chooser=0x7f070021;
         public static final int title_activity_settings=0x7f070020;
         public static final int title_activity_start=0x7f07001f;
     }

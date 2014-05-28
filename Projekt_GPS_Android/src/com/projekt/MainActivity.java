@@ -10,23 +10,23 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.os.IBinder;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Intent;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener, Tab_gps.MyCommunicationListener {
 	public static Context appContext;
 	private ActionBar actionbar;
 	private View customView;
+	private TextView text;
+	private String csvPath;
 	private boolean isRecPressed = false;
 	public TCPService tcpService;
 
@@ -73,14 +73,24 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setHomeButtonEnabled(true);
 
+		// Add CustomView to ActionBar
 		customView = getLayoutInflater().inflate(R.layout.actionbar_button, null);
 		actionbar.setCustomView(customView,
-				new ActionBar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.RIGHT));
+				new ActionBar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.LEFT));
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 
+		// Find Views from CustomView
+		text = (TextView)customView.findViewById(R.id.textView_actionbar);
 		ToggleButton button = (ToggleButton) customView.findViewById(R.id.button);
 		button.setOnCheckedChangeListener(this);
 
+		// If Activtiy is started after the FileChooserActivity, a Path for csv-File is delivered
+		csvPath = getIntent().getStringExtra("File");
+		if(csvPath == null)
+			text.setText("Measurement is running");			
+		else
+			text.setText("Selected File: " + csvPath);
+		
 		// Service start
 		ServiceConnection mTCPconnection = new ServiceConnection() {
 			@Override
@@ -114,7 +124,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 			Toast.makeText(this, "Start Saving", Toast.LENGTH_LONG).show();
 			isRecPressed = true;
 			// Hier kann ein Flag im Service gesetzt werden, um Daten zu speichern
-			
+
 			testappforKMLandCSV.createReports();
 		}
 		else{
@@ -128,16 +138,34 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		return tcpService;
 	}
 
-	//Listener for the Back-Button in the ActionBar
+	//Listener for the ActionBar
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
 		switch (item.getItemId()) {
-		case android.R.id.home:
+		case android.R.id.home: // Back-Button
 			this.finish();
+			return true;
+			
+		case R.id.load_file:
+			startActivity(new Intent(this, FileChooserActivity.class));
+			return true;
+			
+		case R.id.continue_measurement:
+			text.setText("Measurement is running");
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		/** Create an option menu from res/menu/items.xml */
+		getMenuInflater().inflate(R.menu.actionbar_items, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
 
 	@Override
 	public boolean getRecState() {		

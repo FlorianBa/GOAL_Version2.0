@@ -12,5 +12,6 @@
 
     <string name="title_activity_start">GOAL</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_file_chooser">FileChooserActivity</string>
 
 </resources>
