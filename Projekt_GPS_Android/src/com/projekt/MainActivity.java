@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -25,6 +27,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 	public static Context appContext;
 	private ActionBar actionbar;
 	private View customView;
+	private ActionBar.Tab  all_Tab;
 	private TextView text;
 	private String csvPath;
 	private boolean isRecPressed = false;
@@ -42,7 +45,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		//initiating  tabs and set text to it.
-		ActionBar.Tab all_Tab = actionbar.newTab().setText("ALL");
+		all_Tab = actionbar.newTab().setText("ALL");
 		ActionBar.Tab acc_Tab = actionbar.newTab().setText("ACC");
 		ActionBar.Tab winkel_Tab = actionbar.newTab().setText("ANGLE");
 		ActionBar.Tab rpm_Tab = actionbar.newTab().setText("RPM");
@@ -68,7 +71,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		actionbar.addTab(winkel_Tab);
 		actionbar.addTab(rpm_Tab);
 		actionbar.addTab(gps_Tab);
-
+		
 		// enables Back-Button in the ActionBar
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setHomeButtonEnabled(true);
@@ -86,10 +89,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 
 		// If Activtiy is started after the FileChooserActivity, a Path for csv-File is delivered
 		csvPath = getIntent().getStringExtra("File");
-		if(csvPath == null)
-			text.setText("Measurement is running");			
-		else
+		if(csvPath == null){
+			text.setText("Measurement is running");
+		}
+		else{
 			text.setText("Selected File: " + csvPath);
+			// hier ein Flag setzen die in onStart() von jedem Fragment ausgelesen wird --> unterscheidung alte Datei oder aktuelle messung
+		}
 		
 		// Service start
 		ServiceConnection mTCPconnection = new ServiceConnection() {
@@ -153,6 +159,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 			
 		case R.id.continue_measurement:
 			text.setText("Measurement is running");
+			// hier das Flag zurücksetzen
+			restartFragments();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -161,12 +169,26 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		/** Create an option menu from res/menu/items.xml */
+		/** Create an option menu from res/menu/actionbar_items.xml */
 		getMenuInflater().inflate(R.menu.actionbar_items, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-
+	private void restartFragments(){	
+		actionbar.selectTab(all_Tab);
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		
+		// Remove Fragment
+		fragmentTransaction.remove(getFragmentManager().findFragmentById(R.id.fragment_container));
+		
+		// Reload Fragment
+		Tab_all fragment = new Tab_all();
+		fragmentTransaction.replace(R.id.fragment_container, fragment);
+		fragmentTransaction.commit();
+	}
+	
+	
 	@Override
 	public boolean getRecState() {		
 		return isRecPressed;

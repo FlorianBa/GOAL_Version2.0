@@ -61,6 +61,8 @@ public class Tab_all extends Fragment {
 		isFragAlive = true;
 		// Wenn später die Daten durch einen Service geliefert werden, muss hier ein Reset der Series stattfinden
 
+		Log.d("TestAll", "onStart()");
+		
 		appendGraphData(R.id.graph_all_acc);
 		appendGraphData(R.id.graph_all_angle);
 		appendGraphData(R.id.graph_all_rpm);
