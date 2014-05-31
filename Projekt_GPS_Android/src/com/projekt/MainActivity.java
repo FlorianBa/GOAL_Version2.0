@@ -1,17 +1,23 @@
 package com.projekt;
 
+import java.io.File;
+
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -188,6 +194,33 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		fragmentTransaction.commit();
 	}
 	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		// Ask User before finish the Activity
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			new AlertDialog.Builder(this)
+			.setIcon(R.drawable.ic_launcher)
+			.setTitle("Do you really want to finish measurement?")
+			.setPositiveButton("OK", 
+					new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			})
+			.setNegativeButton("Cancel", 
+					new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Action for Cancel-Button
+				}
+			})
+			.show();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 	
 	@Override
 	public boolean getRecState() {		

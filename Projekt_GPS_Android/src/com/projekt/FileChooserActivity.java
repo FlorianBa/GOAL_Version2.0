@@ -30,7 +30,7 @@ public class FileChooserActivity extends ListActivity {
 	private TextView myPath;
 	private String currentParent = root;
 	private Context con = this;
-	
+
 	/** Called when the activity is first created. */
 
 	@Override
@@ -67,12 +67,20 @@ public class FileChooserActivity extends ListActivity {
 		for(int i=0; i < files.length; i++){
 
 			File file = files[i];
-			path.add(file.getPath());
 
-			if(file.isDirectory())
+			if(file.isDirectory()){
 				item.add(file.getName() + "/");
-			else
-				item.add(file.getName());
+				path.add(file.getPath());
+			}
+			else{
+				String fileTyp = file.getName().toLowerCase().substring(file.getName().lastIndexOf(".")+1);
+				
+				// Only csv-Files will be shown
+				if(fileTyp.equals("csv")){
+					item.add(file.getName());
+					path.add(file.getPath());
+				}
+			}
 		}
 
 		ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, R.layout.row, item);
@@ -123,7 +131,7 @@ public class FileChooserActivity extends ListActivity {
 					public void onClick(DialogInterface dialog, int which) {
 						// For csv-Files
 						Log.d(TAG, filePath);
-						
+
 						Intent i = new Intent();
 						i.setClass(con, MainActivity.class);
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Remove Activity from Backstack
