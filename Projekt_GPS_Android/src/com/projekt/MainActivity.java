@@ -156,7 +156,26 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		
 		switch (item.getItemId()) {
 		case android.R.id.home: // Back-Button
-			this.finish();
+			
+				// Ask User before finish the Activity
+				new AlertDialog.Builder(this)
+				.setIcon(R.drawable.ic_launcher)
+				.setTitle("Do you really want to finish measurement?")
+				.setPositiveButton("OK", 
+						new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				})
+				.setNegativeButton("Cancel", 
+						new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// Action for Cancel-Button
+					}
+				})
+				.show();
 			return true;
 			
 		case R.id.load_file:
