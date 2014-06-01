@@ -11,15 +11,14 @@ import com.projekt.R;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.Activity;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-/*
- * Bei diesem Fragment fehlt noch die Anbindung an einem Service der die entsprechenden Daten liefert
- */
+
 public class Tab_winkel extends Fragment {
 
 	private GraphViewSeries series_x, series_y, series_z;
@@ -29,6 +28,7 @@ public class Tab_winkel extends Fragment {
 	private final Handler mHandler = new Handler();
 	private View fragmentView;
 	private volatile boolean isFragAlive;
+	private MyCSVReportListener mCallback;
 
 
 	@Override
@@ -47,11 +47,29 @@ public class Tab_winkel extends Fragment {
 		super.onStart();
 
 		isFragAlive = true;
-		// Wenn später die Daten durch einen Service geliefert werden, muss hier ein Reset der Series stattfinden
 
-		appendGraphData(R.id.graph_angle_x);
-		appendGraphData(R.id.graph_angle_y);
-		appendGraphData(R.id.graph_angle_z);
+		if(mCallback.getIsCSVReportSelected() == false){
+			// No CSV-Report is selected and the normal Measurement will start
+
+			if(((MainActivity)getActivity()).tcpService != null){
+				series_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleX());
+				series_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleY());
+				series_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleZ());
+			}
+
+			// Append Data
+			appendGraphData(R.id.graph_angle_x);
+			appendGraphData(R.id.graph_angle_y);
+			appendGraphData(R.id.graph_angle_z);
+		}
+		else{
+			// CSV-Report is selected and will be shown on Graphs
+			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
+
+			series_x.resetData(report.getAllGraphDataAngleX());
+			series_y.resetData(report.getAllGraphDataAngleY());
+			series_z.resetData(report.getAllGraphDataAngleZ());
+		}
 	}
 
 	/*
@@ -61,57 +79,57 @@ public class Tab_winkel extends Fragment {
 
 		switch(id){
 		case R.id.graph_angle_x: 
-				mTimerX = new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
+			mTimerX = new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
 							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
 							GraphViewData data = GenerateTestData.getSinusData5();
-							
+
 							series_x.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
-						}
 					}
-				};
-				mHandler.postDelayed(mTimerX, delayThread);
+				}
+			};
+			mHandler.postDelayed(mTimerX, delayThread);
 			break;
 
 		case R.id.graph_angle_y: 
-				mTimerY = new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
+			mTimerY = new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
 							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
 							GraphViewData data = GenerateTestData.getCosinusData5();
-							
+
 							series_y.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
-						}
 					}
-				};
-				mHandler.postDelayed(mTimerY, delayThread);
+				}
+			};
+			mHandler.postDelayed(mTimerY, delayThread);
 			break;
 
 		case R.id.graph_angle_z: 
-				mTimerZ = new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
+			mTimerZ = new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
 						if(((MainActivity)getActivity()).tcpService != null) {
 							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();	
 							GraphViewData data = GenerateTestData.getRandomData7();
-							
+
 							series_z.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
-						}
 					}
-				};
-				mHandler.postDelayed(mTimerZ, delayThread);
+				}
+			};
+			mHandler.postDelayed(mTimerZ, delayThread);
 			break;
 		}
 	}
@@ -155,9 +173,27 @@ public class Tab_winkel extends Fragment {
 		LinearLayout layout = (LinearLayout) fragmentView.findViewById(id);
 		layout.addView(graphView);
 	}
-	
+
 	public void onStop(){
 		super.onStop();
 		isFragAlive = false;
+	}
+
+	/*
+	 * Initialise "mCallback"
+	 * With "mCallback" you can use methodes from the main Activity
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the MainActivity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			mCallback = (MyCSVReportListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement MyCSVReportListener");
+		}
 	}
 }
