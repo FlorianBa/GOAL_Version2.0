@@ -28,22 +28,37 @@ public class OpenCSVReport {
 		String line = "";
 		String cvsSplitBy = ",";
 		String[] data = null;
+		List<Double> listTime = new ArrayList<Double>();
 
 		try {
-
+			
+			//read selected file
 			br = new BufferedReader(new FileReader(pathCsvFile));
 			while ((line = br.readLine()) != null) {
 
 				// use comma as separator
 				data = line.split(cvsSplitBy);
+				int timeCounter = 0;
 				
 				//save data in correct list
-				if(data[0].compareTo("Acc_X") == 0){
+				if(data[0].compareTo("time") == 0){
+					for(String s: data){
+						if(s.compareTo("time") != 0){
+							try {
+								listTime.add(Double.parseDouble(s));
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}else if(data[0].compareTo("Acc_X") == 0){
 					for(String s: data){
 						if(s.compareTo("Acc_X") != 0){
 							try {
-								listAccX.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAccX.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -52,8 +67,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("Acc_Y") != 0){
 							try {
-								listAccY.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAccY.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -62,8 +79,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("Acc_Y") != 0){
 							try {
-								listAccZ.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAccZ.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -72,8 +91,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_1") != 0){
 							try {
-								listrpm1.add(new GraphViewData(0, Double.parseDouble(s)));
+								listrpm1.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -82,8 +103,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_2") != 0){
 							try {
-								listrpm2.add(new GraphViewData(0, Double.parseDouble(s)));
+								listrpm2.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -92,8 +115,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_3") != 0){
 							try {
-								listrpm3.add(new GraphViewData(0, Double.parseDouble(s)));
+								listrpm3.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -102,8 +127,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_4") != 0){
 							try {
-								listrpm4.add(new GraphViewData(0, Double.parseDouble(s)));
+								listrpm4.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -112,8 +139,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_X") != 0){
 							try {
-								listAngleX.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAngleX.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -122,8 +151,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_Y") != 0){
 							try {
-								listAngleY.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAngleY.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
@@ -132,8 +163,10 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_Z") != 0){
 							try {
-								listAngleZ.add(new GraphViewData(0, Double.parseDouble(s)));
+								listAngleZ.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
 								e.printStackTrace();
 							}
 						}
