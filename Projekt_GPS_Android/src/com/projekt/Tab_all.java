@@ -11,17 +11,13 @@ import com.projekt.R;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.Activity;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-/*
- * Bei diesem Fragment fehlt noch die Anbindung an einem Service der die entsprechenden Daten liefert
- */
 
 public class Tab_all extends Fragment {
 
@@ -42,6 +38,7 @@ public class Tab_all extends Fragment {
 	private final Handler mHandler = new Handler();
 	private View fragmentView;
 	private volatile boolean isFragAlive;
+	private MyCSVReportListener mCallback;
 
 
 	@Override
@@ -59,14 +56,55 @@ public class Tab_all extends Fragment {
 	public void onStart(){
 		super.onStart();
 		isFragAlive = true;
-		// Wenn später die Daten durch einen Service geliefert werden, muss hier ein Reset der Series stattfinden
 
-		Log.d("TestAll", "onStart()");
-		
-		appendGraphData(R.id.graph_all_acc);
-		appendGraphData(R.id.graph_all_angle);
-		appendGraphData(R.id.graph_all_rpm);
+		if(mCallback.getIsCSVReportSelected() == false){
+			// No CSV-Report is selected and the normal Measurement will start
+
+			if(((MainActivity)getActivity()).tcpService != null){
+				// Acceleration
+				series_acc_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccX());
+				series_acc_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccY());
+				series_acc_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccZ());
+
+				// Angle
+				series_angle_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleX());
+				series_angle_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleY());
+				series_angle_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleZ());
+
+				// RPM
+				series_rpm_1.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm1());
+				series_rpm_2.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm2());
+				series_rpm_3.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm3());
+				series_rpm_4.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm4());
+			}
+			
+			// Append Data
+			appendGraphData(R.id.graph_all_acc);
+			appendGraphData(R.id.graph_all_angle);
+			appendGraphData(R.id.graph_all_rpm);
+		}
+		else{
+			// CSV-Report is selected and will be shown on Graphs
+			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
+
+			// Acceleration
+			series_acc_x.resetData(report.getAllGraphDataAccX());
+			series_acc_y.resetData(report.getAllGraphDataAccY());
+			series_acc_z.resetData(report.getAllGraphDataAccZ());
+
+			// Angle
+			series_angle_x.resetData(report.getAllGraphDataAngleX());
+			series_angle_y.resetData(report.getAllGraphDataAngleY());
+			series_angle_z.resetData(report.getAllGraphDataAngleZ());
+
+			// RPM
+			series_rpm_1.resetData(report.getAllGraphDatarpm1());
+			series_rpm_2.resetData(report.getAllGraphDatarpm2());
+			series_rpm_3.resetData(report.getAllGraphDatarpm3());
+			series_rpm_4.resetData(report.getAllGraphDatarpm4());
+		}
 	}
+
 
 	/*
 	 *  Methode zum Anhängen von Daten an Graphen
@@ -75,84 +113,84 @@ public class Tab_all extends Fragment {
 
 		switch(id){
 		case R.id.graph_all_acc: 
-				mTimerAcc= new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
-							if(((MainActivity)getActivity()).tcpService != null) {
-								//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
-								//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
-								//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
+			mTimerAcc= new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
+						if(((MainActivity)getActivity()).tcpService != null) {
+							//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
+							//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
+							//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
 
-								GraphViewData dataX = GenerateTestData.getSinusData1();
-								GraphViewData dataY = GenerateTestData.getCosinusData1();
-								GraphViewData dataZ = GenerateTestData.getRandomData1();
-								
-								series_acc_x.appendData(dataX, scrollToEnd, graphDataBuffer);
-								series_acc_y.appendData(dataY, scrollToEnd, graphDataBuffer);
-								series_acc_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
-							}
-							mHandler.postDelayed(this, refreshRate);
+							GraphViewData dataX = GenerateTestData.getSinusData1();
+							GraphViewData dataY = GenerateTestData.getCosinusData1();
+							GraphViewData dataZ = GenerateTestData.getRandomData1();
+
+							series_acc_x.appendData(dataX, scrollToEnd, graphDataBuffer);
+							series_acc_y.appendData(dataY, scrollToEnd, graphDataBuffer);
+							series_acc_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
 						}
-						
+						mHandler.postDelayed(this, refreshRate);
 					}
-				};
-				mHandler.postDelayed(mTimerAcc, delayThread);
+
+				}
+			};
+			mHandler.postDelayed(mTimerAcc, delayThread);
 			break;
 
 		case R.id.graph_all_angle: 
-				mTimerAngle= new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
-							if(((MainActivity)getActivity()).tcpService != null) {
-								//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
-								//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
-								//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();
+			mTimerAngle= new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
+						if(((MainActivity)getActivity()).tcpService != null) {
+							//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
+							//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
+							//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();
 
-								GraphViewData dataY = GenerateTestData.getSinusData2();
-								GraphViewData dataZ = GenerateTestData.getCosinusData2();
-								GraphViewData dataX = GenerateTestData.getRandomData2();
-								
-								series_angle_x.appendData(dataX, scrollToEnd, graphDataBuffer);
-								series_angle_y.appendData(dataY, scrollToEnd, graphDataBuffer);
-								series_angle_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
-							}
-							mHandler.postDelayed(this, refreshRate);
+							GraphViewData dataY = GenerateTestData.getSinusData2();
+							GraphViewData dataZ = GenerateTestData.getCosinusData2();
+							GraphViewData dataX = GenerateTestData.getRandomData2();
+
+							series_angle_x.appendData(dataX, scrollToEnd, graphDataBuffer);
+							series_angle_y.appendData(dataY, scrollToEnd, graphDataBuffer);
+							series_angle_z.appendData(dataZ, scrollToEnd, graphDataBuffer);
 						}
-						
+						mHandler.postDelayed(this, refreshRate);
 					}
-				};
-				mHandler.postDelayed(mTimerAngle, delayThread);
+
+				}
+			};
+			mHandler.postDelayed(mTimerAngle, delayThread);
 			break;
 
 		case R.id.graph_all_rpm: 
-				mTimerRPM= new Runnable() {
-					@Override
-					public void run() {
-						if(isFragAlive){
-							if(((MainActivity)getActivity()).tcpService != null) {
-								//GraphViewData data1 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
-								//GraphViewData data2 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
-								//GraphViewData data3 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
-								//GraphViewData data4 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
+			mTimerRPM= new Runnable() {
+				@Override
+				public void run() {
+					if(isFragAlive){
+						if(((MainActivity)getActivity()).tcpService != null) {
+							//GraphViewData data1 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
+							//GraphViewData data2 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
+							//GraphViewData data3 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
+							//GraphViewData data4 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
 
-								GraphViewData data1 = GenerateTestData.getSinusData3();
-								GraphViewData data2 = GenerateTestData.getCosinusData3();
-								GraphViewData data3 = GenerateTestData.getRandomData3();
-								GraphViewData data4 = GenerateTestData.getRandomData4();
-								
-								series_rpm_1.appendData(data1, scrollToEnd, graphDataBuffer);
-								series_rpm_2.appendData(data2, scrollToEnd, graphDataBuffer);
-								series_rpm_3.appendData(data3, scrollToEnd, graphDataBuffer);
-								series_rpm_4.appendData(data4, scrollToEnd, graphDataBuffer);
-							}
-							mHandler.postDelayed(this, refreshRate);
+							GraphViewData data1 = GenerateTestData.getSinusData3();
+							GraphViewData data2 = GenerateTestData.getCosinusData3();
+							GraphViewData data3 = GenerateTestData.getRandomData3();
+							GraphViewData data4 = GenerateTestData.getRandomData4();
+
+							series_rpm_1.appendData(data1, scrollToEnd, graphDataBuffer);
+							series_rpm_2.appendData(data2, scrollToEnd, graphDataBuffer);
+							series_rpm_3.appendData(data3, scrollToEnd, graphDataBuffer);
+							series_rpm_4.appendData(data4, scrollToEnd, graphDataBuffer);
 						}
-						
+						mHandler.postDelayed(this, refreshRate);
 					}
-				};
-				mHandler.postDelayed(mTimerRPM, delayThread);
+
+				}
+			};
+			mHandler.postDelayed(mTimerRPM, delayThread);
 			break;
 
 
@@ -219,6 +257,24 @@ public class Tab_all extends Fragment {
 	public void onStop(){
 		super.onStop();
 		isFragAlive = false;
+	}
+
+	/*
+	 * Initialise "mCallback"
+	 * With "mCallback" you can use methodes from the main Activity
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the MainActivity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			mCallback = (MyCSVReportListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement MyCSVReportListener");
+		}
 	}
 
 }

@@ -67,7 +67,8 @@ public class StorageUtils {
                 Log.d(TAG, line);
                 if (line.contains("vfat") || line.contains("/mnt")) {
                     StringTokenizer tokens = new StringTokenizer(line, " ");
-                    String unused = tokens.nextToken(); //device
+                    @SuppressWarnings("unused")
+					String unused = tokens.nextToken(); //device
                     String mount_point = tokens.nextToken(); //mount point
                     if (paths.contains(mount_point)) {
                         continue;
