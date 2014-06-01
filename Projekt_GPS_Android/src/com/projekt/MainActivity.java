@@ -1,6 +1,5 @@
 package com.projekt;
 
-import java.io.File;
 
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
@@ -14,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.os.IBinder;
 import android.view.KeyEvent;
@@ -29,13 +27,14 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Intent;
 
-public class MainActivity extends Activity implements OnCheckedChangeListener, Tab_gps.MyCommunicationListener {
+public class MainActivity extends Activity implements OnCheckedChangeListener, Tab_gps.MyCommunicationListener, MyCSVReportListener{ 
 	public static Context appContext;
 	private ActionBar actionbar;
 	private View customView;
 	private ActionBar.Tab  all_Tab;
 	private TextView text;
-	private String csvPath;
+	private String csvPath, absolutCSVPath;
+	private boolean isCSVReportSelected = false;
 	private boolean isRecPressed = false;
 	public TCPService tcpService;
 
@@ -77,15 +76,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		actionbar.addTab(winkel_Tab);
 		actionbar.addTab(rpm_Tab);
 		actionbar.addTab(gps_Tab);
-		
+
 		// enables Back-Button in the ActionBar
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setHomeButtonEnabled(true);
 
 		// Add CustomView to ActionBar
 		customView = getLayoutInflater().inflate(R.layout.actionbar_button, null);
-		actionbar.setCustomView(customView,
-				new ActionBar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.LEFT));
+		actionbar.setCustomView(customView, new ActionBar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.LEFT));
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
 
 		// Find Views from CustomView
@@ -94,15 +92,18 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		button.setOnCheckedChangeListener(this);
 
 		// If Activtiy is started after the FileChooserActivity, a Path for csv-File is delivered
-		csvPath = getIntent().getStringExtra("File");
+		absolutCSVPath = getIntent().getStringExtra("AbsolutFile"); // Absolute Path
+		csvPath = getIntent().getStringExtra("File"); // Name of the Path
+		
+		// csvPath got a Path, when User choose File via FileChooserActivity 
 		if(csvPath == null){
 			text.setText("Measurement is running");
 		}
 		else{
 			text.setText("Selected File: " + csvPath);
-			// hier ein Flag setzen die in onStart() von jedem Fragment ausgelesen wird --> unterscheidung alte Datei oder aktuelle messung
+			isCSVReportSelected = true;
 		}
-		
+
 		// Service start
 		ServiceConnection mTCPconnection = new ServiceConnection() {
 			@Override
@@ -153,39 +154,41 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 	//Listener for the ActionBar
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		switch (item.getItemId()) {
 		case android.R.id.home: // Back-Button
-			
-				// Ask User before finish the Activity
-				new AlertDialog.Builder(this)
-				.setIcon(R.drawable.ic_launcher)
-				.setTitle("Do you really want to finish measurement?")
-				.setPositiveButton("OK", 
-						new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				})
-				.setNegativeButton("Cancel", 
-						new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Action for Cancel-Button
-					}
-				})
-				.show();
+
+			// Ask User before finish the Activity
+			new AlertDialog.Builder(this)
+			.setIcon(R.drawable.ic_launcher)
+			.setTitle("Do you really want to finish measurement?")
+			.setPositiveButton("OK", 
+					new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			})
+			.setNegativeButton("Cancel", 
+					new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Action for Cancel-Button
+				}
+			})
+			.show();
 			return true;
-			
+
 		case R.id.load_file:
 			startActivity(new Intent(this, FileChooserActivity.class));
 			return true;
-			
+
 		case R.id.continue_measurement:
-			text.setText("Measurement is running");
-			// hier das Flag zurücksetzen
-			restartFragments();
+			if(isCSVReportSelected){
+				text.setText("Measurement is running");
+				isCSVReportSelected = false;
+				restartFragments();
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -198,22 +201,25 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		getMenuInflater().inflate(R.menu.actionbar_items, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	private void restartFragments(){	
+		// Jump to All Tab
 		actionbar.selectTab(all_Tab);
+		
+		// Start Tansaction
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		
+
 		// Remove Fragment
 		fragmentTransaction.remove(getFragmentManager().findFragmentById(R.id.fragment_container));
-		
+
 		// Reload Fragment
 		Tab_all fragment = new Tab_all();
 		fragmentTransaction.replace(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
 	}
-	
-	
+
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		
@@ -240,9 +246,22 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
+	// For GPS Fragment
 	public boolean getRecState() {		
 		return isRecPressed;
+	}
+
+	@Override
+	// For All, Acc, Angle and RPM Fragment
+	public boolean getIsCSVReportSelected() {
+		return isCSVReportSelected;
+	}
+
+	@Override
+	// For All, Acc, Angle and RPM Fragment
+	public String getAbsolutCSVPath() {
+		return absolutCSVPath;
 	}
 }
