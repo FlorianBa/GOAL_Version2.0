@@ -10,7 +10,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.projekt.R;
 
 import android.graphics.Color;
@@ -22,7 +21,9 @@ import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class Tab_gps  extends Fragment {
@@ -34,8 +35,9 @@ public class Tab_gps  extends Fragment {
     static Location MyLocation = new Location("My location");
     static Handler handler;
     static Circle modelcar;
-	
+	private ImageButton center_button;
     private Thread t; // update location of modelcar
+    static boolean center_flag=false;
   
     // MainActivity must implement this interface
     // For Communication between Fragment and MainActivity
@@ -48,6 +50,16 @@ public class Tab_gps  extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View v = inflater.inflate(R.layout.gps_frag, container, false);
+		center_button = (ImageButton)v.findViewById(R.id.center_button);
+		
+		center_button.setOnClickListener(new OnClickListener()
+		{
+		public void onClick(View v)
+		{
+			center_flag=true;
+			
+		}
+		});
 		// Gets the MapView from the XML layout and creates it
 
 		try {
@@ -67,8 +79,10 @@ public class Tab_gps  extends Fragment {
 			if(mapView!=null)
 			{
 				map = mapView.getMap(); //returns the googlemap
-				map.getUiSettings().setMyLocationButtonEnabled(true); //Enables or disables the my-location button.
-				map.setMyLocationEnabled(false); //Enables or disables the my position in the map.
+				//set Map to Hyprid-View
+				map.setMapType(com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID);
+				map.getUiSettings().setMyLocationButtonEnabled(false); //Enables or disables the my-location button.
+				map.setMyLocationEnabled(true); //Enables or disables the my position in the map.
 				
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(48.9575483,11.4002600), 17);
 				map.animateCamera(cameraUpdate);	//animate and zoom in the map  
@@ -95,7 +109,8 @@ public class Tab_gps  extends Fragment {
 				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(new LatLng(48.9575483, 11.4002600));
 		
 		modelcar=Tab_gps.map.addCircle(mylocation);
-//				
+		
+//		
 		//Thread to draw the current position and path if rec is pressed
 		if(t==null)
 		{
