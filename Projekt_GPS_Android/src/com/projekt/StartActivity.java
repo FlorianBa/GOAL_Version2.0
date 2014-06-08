@@ -13,8 +13,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import java.lang.reflect.Method;
+
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
+
+import android.util.Log;
+
+
 public class StartActivity extends Activity implements OnClickListener {
 	private static final String KEY_LISTPREF = "saving";
+
+    public WifiManager wifi;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +36,17 @@ public class StartActivity extends Activity implements OnClickListener {
 		Button settingsButton = (Button)findViewById(R.id.button_settings);
 		startButton.setOnClickListener(this);
 		settingsButton.setOnClickListener(this);
-	}
+
+        try {
+            turnHotSpotOnOff(1);
+        }catch (Exception e){
+
+            Log.d("Error", "Can't instantiate access point");
+        }
+
+
+
+    }
 
 	@Override
 	public void onClick(View view) {
@@ -68,4 +89,41 @@ public class StartActivity extends Activity implements OnClickListener {
 			Report.setExtStorage(true);
 		}
 	}
+    public void turnHotSpotOnOff(int i) throws Exception {
+        wifi = (WifiManager) getSystemService(StartActivity.this.WIFI_SERVICE);
+        WifiConfiguration config = new WifiConfiguration();
+        config.SSID = "123";
+
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+
+        switch (i) {
+            case 1:
+
+                wifi.setWifiEnabled(false);
+
+                for (Method method : wmMethods) {
+                    if (method.getName().equals("setWifiApEnabled")) {
+                        method.invoke(wifi, config, true);
+                    }
+                }
+                break;
+
+            case 2:
+
+                for (Method method : wmMethods) {
+                    if (method.getName().equals("setWifiApEnabled")) {
+
+                        method.invoke(wifi, null, false);
+
+                    }
+                }
+                break;
+
+        }
+
+    }
+
+
+
 }
+

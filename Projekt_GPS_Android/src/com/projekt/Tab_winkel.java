@@ -51,10 +51,10 @@ public class Tab_winkel extends Fragment {
 		if(mCallback.getIsCSVReportSelected() == false){
 			// No CSV-Report is selected and the normal Measurement will start
 
-			if(((MainActivity)getActivity()).tcpService != null){
-				series_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleX());
-				series_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleY());
-				series_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleZ());
+			if(((MainActivity)getActivity()).udpService != null){
+				series_x.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleX());
+				series_y.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleY());
+				series_z.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleZ());
 			}
 
 			// Append Data
@@ -73,7 +73,7 @@ public class Tab_winkel extends Fragment {
 	}
 
 	/*
-	 *  Methode zum Anhängen von Daten an Graphen
+	 *  Methode zum Anhï¿½ngen von Daten an Graphen
 	 */
 	private void appendGraphData(int id) {
 
@@ -83,9 +83,9 @@ public class Tab_winkel extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
-							GraphViewData data = GenerateTestData.getSinusData5();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleX();
+							//GraphViewData data = GenerateTestData.getSinusData5();
 
 							series_x.appendData(data, scrollToEnd, graphDataBuffer);
 						}
@@ -101,9 +101,9 @@ public class Tab_winkel extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
-							GraphViewData data = GenerateTestData.getCosinusData5();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleY();
+							//GraphViewData data = GenerateTestData.getCosinusData5();
 
 							series_y.appendData(data, scrollToEnd, graphDataBuffer);
 						}
@@ -119,9 +119,9 @@ public class Tab_winkel extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();	
-							GraphViewData data = GenerateTestData.getRandomData7();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleZ();
+							//GraphViewData data = GenerateTestData.getRandomData7();
 
 							series_z.appendData(data, scrollToEnd, graphDataBuffer);
 						}

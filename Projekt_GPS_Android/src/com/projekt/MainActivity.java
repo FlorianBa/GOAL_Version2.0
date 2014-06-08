@@ -36,7 +36,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 	private String csvPath, absolutCSVPath;
 	private boolean isCSVReportSelected = false;
 	private boolean isRecPressed = false;
-	public TCPService tcpService;
+	public UDPService udpService;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -109,22 +109,22 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
 				// TODO Auto-generated method stub
-				tcpService = null;
+				udpService = null;
 			}
 
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				// TODO Auto-generated method stub
-				tcpService = ((TCPService.LocalBinder) service).getService();
-				tcpService.setLink(MainActivity.this);
+				udpService = ((UDPService.LocalBinder) service).getService();
+				udpService.setLink(MainActivity.this);
 			}
 		};
 
 
-		Intent TCPserviceIntent = new Intent (this, TCPService.class);
+		Intent udpServiceIntent = new Intent (this, UDPService.class);
 
-		bindService(TCPserviceIntent, mTCPconnection, Context.BIND_AUTO_CREATE);
-		startService(TCPserviceIntent);
+		bindService(udpServiceIntent, mTCPconnection, Context.BIND_AUTO_CREATE);
+		startService(udpServiceIntent);
 		// TCP Connection END ---------------------------------------
 
 		//Prevent Stand-By-Mode
@@ -146,9 +146,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 		}
 	}
 
-	public TCPService getTcpService(){
+	public UDPService getudpService(){
 
-		return tcpService;
+		return udpService;
 	}
 
 	//Listener for the ActionBar

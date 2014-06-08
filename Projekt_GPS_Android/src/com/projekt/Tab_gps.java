@@ -106,7 +106,7 @@ public class Tab_gps  extends Fragment {
 		//modelcar is an Circle. It shows our current location of the modelcar
 		//mylocation is the configuration for the Circle
 		CircleOptions mylocation = new CircleOptions().radius(3)
-				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(new LatLng(48.9575483, 11.4002600));
+				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(((MainActivity)getActivity()).udpService.getCurrentLocation());
 		
 		modelcar=Tab_gps.map.addCircle(mylocation);
 		

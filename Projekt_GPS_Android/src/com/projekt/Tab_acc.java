@@ -50,10 +50,10 @@ public class Tab_acc extends Fragment {
 		if(mCallback.getIsCSVReportSelected() == false){
 			// No CSV-Report is selected and the normal Measurement will start
 
-			if(((MainActivity)getActivity()).tcpService != null){
-				series_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccX());
-				series_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccY());
-				series_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccZ());
+			if(((MainActivity)getActivity()).udpService != null){
+				series_x.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccX());
+				series_y.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccY());
+				series_z.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccZ());
 			}
 
 			appendGraphData(R.id.graph_acc_x);
@@ -64,13 +64,13 @@ public class Tab_acc extends Fragment {
 			// CSV-Report is selected and will be shown on Graphs
 			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
 			//series_x.resetData(report.getAllGraphDataAccX());
-			series_x.resetData(getTestSeriesData()); // Test Daten können später gelöscht werden und auch die Methode dazu
+			series_x.resetData(getTestSeriesData()); // Test Daten kï¿½nnen spï¿½ter gelï¿½scht werden und auch die Methode dazu
 			series_y.resetData(report.getAllGraphDataAccY());
 			series_z.resetData(report.getAllGraphDataAccZ());
 		}
 	}
 
-	// Test Funktion kann später gelöscht werden
+	// Test Funktion kann spï¿½ter gelï¿½scht werden
 	private GraphViewData[] getTestSeriesData(){
 		GraphViewData array[] = new GraphViewData[150];
 		for(int i = 0; i<150;i++){
@@ -81,7 +81,7 @@ public class Tab_acc extends Fragment {
 	}
 
 	/*
-	 *  Methode zum Anhängen von Daten an Graphen
+	 *  Methode zum Anhï¿½ngen von Daten an Graphen
 	 */
 	private void appendGraphData(int id) {
 
@@ -91,9 +91,9 @@ public class Tab_acc extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
-							GraphViewData data = GenerateTestData.getSinusData6();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAccX();
+							//GraphViewData data = GenerateTestData.getSinusData6();
 							series_x.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
@@ -108,9 +108,9 @@ public class Tab_acc extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
-							GraphViewData data = GenerateTestData.getCosinusData6();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAccY();
+							//GraphViewData data = GenerateTestData.getCosinusData6();
 							series_y.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);
@@ -125,9 +125,9 @@ public class Tab_acc extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data =((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
-							GraphViewData data = GenerateTestData.getRandomData8();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data =((MainActivity)getActivity()).udpService.getCurrentGraphDataAccZ();
+							//GraphViewData data = GenerateTestData.getRandomData8();
 							series_z.appendData(data, scrollToEnd, graphDataBuffer);
 						}
 						mHandler.postDelayed(this, refreshRate);

@@ -60,22 +60,22 @@ public class Tab_all extends Fragment {
 		if(mCallback.getIsCSVReportSelected() == false){
 			// No CSV-Report is selected and the normal Measurement will start
 
-			if(((MainActivity)getActivity()).tcpService != null){
+			if(((MainActivity)getActivity()).udpService != null){
 				// Acceleration
-				series_acc_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccX());
-				series_acc_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccY());
-				series_acc_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAccZ());
+				series_acc_x.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccX());
+				series_acc_y.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccY());
+				series_acc_z.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAccZ());
 
 				// Angle
-				series_angle_x.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleX());
-				series_angle_y.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleY());
-				series_angle_z.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDataAngleZ());
+				series_angle_x.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleX());
+				series_angle_y.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleY());
+				series_angle_z.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleZ());
 
 				// RPM
-				series_rpm_1.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm1());
-				series_rpm_2.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm2());
-				series_rpm_3.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm3());
-				series_rpm_4.resetData(((MainActivity)getActivity()).tcpService.getAllGraphDatarpm4());
+				series_rpm_1.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm1());
+				series_rpm_2.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm2());
+				series_rpm_3.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm3());
+				series_rpm_4.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm4());
 			}
 			
 			// Append Data
@@ -107,7 +107,7 @@ public class Tab_all extends Fragment {
 
 
 	/*
-	 *  Methode zum Anhängen von Daten an Graphen
+	 *  Methode zum Anhï¿½ngen von Daten an Graphen
 	 */
 	private void appendGraphData(int id) {
 
@@ -117,14 +117,14 @@ public class Tab_all extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccX();
-							//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccY();
-							//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAccZ();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData dataX = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAccX();
+							GraphViewData dataY = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAccY();
+							GraphViewData dataZ = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAccZ();
 
-							GraphViewData dataX = GenerateTestData.getSinusData1();
-							GraphViewData dataY = GenerateTestData.getCosinusData1();
-							GraphViewData dataZ = GenerateTestData.getRandomData1();
+							//GraphViewData dataX = GenerateTestData.getSinusData1();
+							//GraphViewData dataY = GenerateTestData.getCosinusData1();
+							//GraphViewData dataZ = GenerateTestData.getRandomData1();
 
 							series_acc_x.appendData(dataX, scrollToEnd, graphDataBuffer);
 							series_acc_y.appendData(dataY, scrollToEnd, graphDataBuffer);
@@ -143,14 +143,14 @@ public class Tab_all extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData dataX = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleX();
-							//GraphViewData dataY = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleY();
-							//GraphViewData dataZ = ((MainActivity)getActivity()).tcpService.getCurrentGraphDataAngleZ();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData dataX = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleX();
+							GraphViewData dataY = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleY();
+							GraphViewData dataZ = ((MainActivity)getActivity()).udpService.getCurrentGraphDataAngleZ();
 
-							GraphViewData dataY = GenerateTestData.getSinusData2();
-							GraphViewData dataZ = GenerateTestData.getCosinusData2();
-							GraphViewData dataX = GenerateTestData.getRandomData2();
+							//GraphViewData dataY = GenerateTestData.getSinusData2();
+							//GraphViewData dataZ = GenerateTestData.getCosinusData2();
+							//GraphViewData dataX = GenerateTestData.getRandomData2();
 
 							series_angle_x.appendData(dataX, scrollToEnd, graphDataBuffer);
 							series_angle_y.appendData(dataY, scrollToEnd, graphDataBuffer);
@@ -169,16 +169,16 @@ public class Tab_all extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						if(((MainActivity)getActivity()).tcpService != null) {
-							//GraphViewData data1 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm1();
-							//GraphViewData data2 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm2();
-							//GraphViewData data3 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm3();
-							//GraphViewData data4 = ((MainActivity)getActivity()).tcpService.getCurrentGraphDatarpm4();
+						if(((MainActivity)getActivity()).udpService != null) {
+							GraphViewData data1 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm1();
+							GraphViewData data2 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm2();
+							GraphViewData data3 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm3();
+							GraphViewData data4 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm4();
 
-							GraphViewData data1 = GenerateTestData.getSinusData3();
-							GraphViewData data2 = GenerateTestData.getCosinusData3();
-							GraphViewData data3 = GenerateTestData.getRandomData3();
-							GraphViewData data4 = GenerateTestData.getRandomData4();
+							//GraphViewData data1 = GenerateTestData.getSinusData3();
+							//GraphViewData data2 = GenerateTestData.getCosinusData3();
+							//GraphViewData data3 = GenerateTestData.getRandomData3();
+							//GraphViewData data4 = GenerateTestData.getRandomData4();
 
 							series_rpm_1.appendData(data1, scrollToEnd, graphDataBuffer);
 							series_rpm_2.appendData(data2, scrollToEnd, graphDataBuffer);
