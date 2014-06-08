@@ -34,54 +34,38 @@ public class UDPService extends Service {
     private MainActivity linkToParent;
 
 
-//    private List<GraphView.GraphViewData> listAccX ;
-//    private List<GraphView.GraphViewData> listAccY ;
-//    private List<GraphView.GraphViewData> listAccZ ;
-//    private List<GraphView.GraphViewData> listrpm1 ;
-//    private List<GraphView.GraphViewData> listrpm2 ;
-//    private List<GraphView.GraphViewData> listrpm3 ;
-//    private List<GraphView.GraphViewData> listrpm4 ;
-//    private List<GraphView.GraphViewData> listAngleX ;
-//    private List<GraphView.GraphViewData> listAngleY;
-//    private List<GraphView.GraphViewData> listAngleZ ;
-//    private List<LatLng> listLocations ;
 
 
-    private  List<GraphView.GraphViewData> listAccX = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listAccZ = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listrpm1 = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listrpm2 = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listrpm3 = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listrpm4 = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listAngleX = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listAngleY = new ArrayList<GraphView.GraphViewData>();
-    private  List<GraphView.GraphViewData> listAngleZ = new ArrayList<GraphView.GraphViewData>();
+
+    // Arrays to store received data
+
+    private  List<GraphView.GraphViewData> listAccX = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
+    private  List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
+    private  List<GraphView.GraphViewData> listAccZ = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
+    private  List<GraphView.GraphViewData> listrpm1 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
+    private  List<GraphView.GraphViewData> listrpm2 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
+    private  List<GraphView.GraphViewData> listrpm3 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
+    private  List<GraphView.GraphViewData> listrpm4 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
+    private  List<GraphView.GraphViewData> listAngleX = new ArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
+    private  List<GraphView.GraphViewData> listAngleY = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
+    private  List<GraphView.GraphViewData> listAngleZ = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
     private  List<LatLng> listLocations = new ArrayList<LatLng>();
+
+
+    // Helper flag to enable external and internal persistence storing
+
     private static boolean enableSaving = false;
+
+
+    // received data counter
+
    private  double timestamp = 0;
-    public void init()
-    {
-
-//      listAccX = new ArrayList<GraphView.GraphViewData>();
-//    List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>();
-//         List<GraphView.GraphViewData> listAccZ = new ArrayList<GraphView.GraphViewData>();
-//       List<GraphView.GraphViewData> listrpm1 = new ArrayList<GraphView.GraphViewData>();
-//        List<GraphView.GraphViewData> listrpm2 = new ArrayList<GraphView.GraphViewData>();
-//      List<GraphView.GraphViewData> listrpm3 = new ArrayList<GraphView.GraphViewData>();
-//         List<GraphView.GraphViewData> listrpm4 = new ArrayList<GraphView.GraphViewData>();
-//      List<GraphView.GraphViewData> listAngleX = new ArrayList<GraphView.GraphViewData>();
-//       List<GraphView.GraphViewData> listAngleY = new ArrayList<GraphView.GraphViewData>();
-//         List<GraphView.GraphViewData> listAngleZ = new ArrayList<GraphView.GraphViewData>();
-//         List<LatLng> listLocations = new ArrayList<LatLng>();
 
 
 
 
 
-    }
-
-
+    // Binder method for connecting class to MainActivity
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -90,9 +74,14 @@ public class UDPService extends Service {
         return myBinder;
     }
 
+
+    // method to link Service
+
     public void setLink(Object parent) {
         linkToParent = (MainActivity) parent;
     }
+
+    // custom binder class
 
     private final IBinder myBinder = new LocalBinder();
 
@@ -102,6 +91,9 @@ public class UDPService extends Service {
         }
     }
 
+
+    // Starting point of Service
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
@@ -110,6 +102,9 @@ public class UDPService extends Service {
         socket = new Socket();
         Log.d("UDP" , "On create");
     }
+
+
+    // Deinitializer
 
     @Override
     public void onDestroy() {
@@ -124,6 +119,9 @@ public class UDPService extends Service {
         socket = null;
     }
 
+
+    // Start Service Call
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
@@ -133,6 +131,9 @@ public class UDPService extends Service {
         Log.d("UDP", "on start command");
         return super.onStartCommand(intent, flags, startId);
     }
+
+
+    // Class to start working Thread and bind to Logic
 
     class connectSocket implements Runnable {
         @Override
@@ -167,6 +168,8 @@ public class UDPService extends Service {
         }
     }
 
+
+    // Callback for receiving packages over udp
 
     private void processReceivedData(DatagramPacket p) {
 
@@ -254,6 +257,9 @@ public class UDPService extends Service {
     }
 
 
+    // static function: processing byte values of CAN frames
+
+
     public static Double getValueFromBytes(byte[] buffer,
                                            int startByte, int endByte, Boolean byteIsUnsigned) {
 
@@ -278,6 +284,10 @@ public class UDPService extends Service {
     private static int unsignedByteToInt(byte b) {
         return (int) b & 0xFF;
     }
+
+
+
+    //  Link methods for retrieving stored values
 
 
     public GraphView.GraphViewData getCurrentGraphDataAccX() {
@@ -457,6 +467,11 @@ public class UDPService extends Service {
             return (GraphView.GraphViewData[]) listAngleZ.toArray(new GraphView.GraphViewData[listAngleZ.size()]);
         }
     }
+
+
+
+    // enables persistence storage
+
 
     public static void SetEnableSaving(boolean state) {
         enableSaving = state;
