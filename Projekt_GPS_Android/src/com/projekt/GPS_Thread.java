@@ -104,7 +104,7 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 					//Center the modelcar
 					if (Tab_gps.center_flag)
 					{
-						Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(simulate[a]));
+						Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(((MainActivity)getActivity()).udpService.getCurrentLocation()));
 						Tab_gps.center_flag=false;
 						
 					}
