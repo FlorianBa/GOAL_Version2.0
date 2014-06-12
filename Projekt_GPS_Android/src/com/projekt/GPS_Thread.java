@@ -4,6 +4,7 @@ package com.projekt;
 import android.graphics.Color;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
 
 public class GPS_Thread extends Tab_gps implements Runnable {
 
@@ -98,13 +99,16 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 						}
 
 					// aktualiesiere die coordinaten des modellfahrzeugs
-//					Tab_gps.modelcar.setCenter(((MainActivity)getActivity()).udpService.getCurrentLocation());
+
 					Tab_gps.modelcar.setCenter(((MainActivity)getActivity()).udpService.getCurrentLocation());
-//					//Center the modelcar
-//					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(simulate[a], 17);
-//					Tab_gps.map.animateCamera(cameraUpdate);
-					// alternative 
-//					Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(simulate[a]));
+					//Center the modelcar
+					if (Tab_gps.center_flag)
+					{
+						Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(simulate[a]));
+						Tab_gps.center_flag=false;
+						
+					}
+
 				}
 			});
 			
