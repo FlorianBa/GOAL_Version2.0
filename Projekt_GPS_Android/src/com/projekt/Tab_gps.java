@@ -1,5 +1,8 @@
 package com.projekt;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -38,6 +41,8 @@ public class Tab_gps  extends Fragment {
 	private ImageButton center_button;
     private Thread t; // update location of modelcar
     static boolean center_flag=false;
+    
+    static List <LatLng> gpslist = new ArrayList<LatLng>();
   
     // MainActivity must implement this interface
     // For Communication between Fragment and MainActivity
@@ -84,10 +89,10 @@ public class Tab_gps  extends Fragment {
 				map.getUiSettings().setMyLocationButtonEnabled(false); //Enables or disables the my-location button.
 				map.setMyLocationEnabled(true); //Enables or disables the my position in the map.
 				
-				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(48.9575483,11.4002600), 17);
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(((MainActivity)getActivity()).udpService.getCurrentLocation(), 17);
 				map.animateCamera(cameraUpdate);	//animate and zoom in the map  
 
-				firsttime=true; //test für speicherproblemlösung (recbuttonstatus)
+				firsttime=true; //test fÃ¼r speicherproblemlÃ¶sung (recbuttonstatus)
 
 				// Showing the current location in Google Map, erst wenn wir die gps daten erhalten!!!!
 				//googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -105,20 +110,33 @@ public class Tab_gps  extends Fragment {
 
 		//modelcar is an Circle. It shows our current location of the modelcar
 		//mylocation is the configuration for the Circle
+
 		CircleOptions mylocation = new CircleOptions().radius(3)
 				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(((MainActivity)getActivity()).udpService.getCurrentLocation());
-		
 		modelcar=Tab_gps.map.addCircle(mylocation);
 		
-//		
-		//Thread to draw the current position and path if rec is pressed
+		
+//		Thread to draw the current position and path if rec is pressed
 		if(t==null)
 		{
 			handler=new Handler();
 			t=new Thread(new GPS_Thread());
 			t.start();
 		}
-//					
+					
+		// refresh the List of the gpsdata
+		final Runnable datarefresher = new Runnable()
+		{
+		    public void run() 
+		    {
+		    	gpslist=((MainActivity)getActivity()).udpService.getAllLocations();
+		        handler.postDelayed(this, 500);
+		    }
+		};
+
+		handler.postDelayed(datarefresher, 500);
+		
+		
 		return v;
 	}
 		
