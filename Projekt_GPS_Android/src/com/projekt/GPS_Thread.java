@@ -1,7 +1,11 @@
 package com.projekt;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Color;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,6 +23,7 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 	private int path_state=1; // 1 fÃ¼r die erste messung usw. 
 	private boolean isRecPressed;
 	private boolean measurement_end_flag=false;
+
 	
 	@Override
 	public void run() {
@@ -33,23 +38,23 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 				switch(path_state)
 				{
 				case 1:
-					mydrawer_opt_1.add(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					mydrawer_opt_1.add(getCurrentLocation());
 					measurement_end_flag=true;
 					break;
 				case 2:
-					mydrawer_opt_2.add(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					mydrawer_opt_2.add(getCurrentLocation());
 					measurement_end_flag=true;
 					break;
 				case 3:
-					mydrawer_opt_3.add(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					mydrawer_opt_3.add(getCurrentLocation());
 					measurement_end_flag=true;
 					break;
 				case 4:
-					mydrawer_opt_4.add(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					mydrawer_opt_4.add(getCurrentLocation());
 					measurement_end_flag=true;
 					break;
 				case 5:
-					mydrawer_opt_5.add(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					mydrawer_opt_5.add(getCurrentLocation());
 					measurement_end_flag=true;
 					break;
 					
@@ -70,7 +75,8 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 			}
 //			mylocation.center(simulate[a]);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
+						
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -99,14 +105,24 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 						}
 
 					// aktualiesiere die coordinaten des modellfahrzeugs
-
-					Tab_gps.modelcar.setCenter(((MainActivity)getActivity()).udpService.getCurrentLocation());
+					try{
+					Tab_gps.modelcar.setCenter(getCurrentLocation());
+					}catch(Exception e)
+					{
+						System.out.println(e);
+					}
 					//Center the modelcar
+					try{
 					if (Tab_gps.center_flag)
 					{
-						Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(((MainActivity)getActivity()).udpService.getCurrentLocation()));
+						
+						Tab_gps.map.moveCamera(CameraUpdateFactory.newLatLng(getCurrentLocation()));
 						Tab_gps.center_flag=false;
 						
+					}
+					}catch(Exception e)
+					{
+						System.out.println(e);
 					}
 
 				}
@@ -115,4 +131,11 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 		}
 	
 	}
+	
+    public LatLng getCurrentLocation() {
+        if (!Tab_gps.gpslist.isEmpty())
+            return Tab_gps.gpslist.get(gpslist.size() - 1);
+        else
+            return new LatLng(0.0, 0.0);
+    }
 }
