@@ -39,15 +39,18 @@ public class Tab_gps  extends Fragment {
 	static Handler handler;
 	static Circle modelcar;
 	private ImageButton center_button;
-
 	private Thread t; // update location of modelcar
 	static boolean center_flag=false;
+	private volatile boolean isFragAlive;
+
+	static List <LatLng> gpslist = new ArrayList<LatLng>();
 
 	// MainActivity must implement this interface
 	// For Communication between Fragment and MainActivity
 	public interface MyCommunicationListener {
 		public boolean getRecState();
 	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,9 +89,8 @@ public class Tab_gps  extends Fragment {
 				map.setMapType(com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID);
 				map.getUiSettings().setMyLocationButtonEnabled(false); //Enables or disables the my-location button.
 				map.setMyLocationEnabled(true); //Enables or disables the my position in the map.
-				
-				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(((MainActivity)getActivity()).udpService.getCurrentLocation(), 17);
 
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(((MainActivity)getActivity()).udpService.getCurrentLocation(), 17);
 				map.animateCamera(cameraUpdate);	//animate and zoom in the map  
 
 				firsttime=true; //test fÃ¼r speicherproblemlÃ¶sung (recbuttonstatus)
@@ -113,32 +115,43 @@ public class Tab_gps  extends Fragment {
 		CircleOptions mylocation = new CircleOptions().radius(3)
 				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(((MainActivity)getActivity()).udpService.getCurrentLocation());
 		modelcar=Tab_gps.map.addCircle(mylocation);
-		
-		
-//		Thread to draw the current position and path if rec is pressed
+
+
+		//		Thread to draw the current position and path if rec is pressed
 		if(t==null)
 		{
 			handler=new Handler();
 			t=new Thread(new GPS_Thread());
 			t.start();
 		}
-					
+
 		// refresh the List of the gpsdata
 		final Runnable datarefresher = new Runnable()
 		{
-		    public void run() 
-		    {
-		    	gpslist=((MainActivity)getActivity()).udpService.getAllLocations();
-		        handler.postDelayed(this, 500);
-		    }
+			public void run() 
+			{
+				if(isFragAlive){
+					gpslist=((MainActivity)getActivity()).udpService.getAllLocations();
+					handler.postDelayed(this, 500);
+				}
+			}
 		};
 
 		handler.postDelayed(datarefresher, 500);
-		
+
+
 		return v;
 	}
 
+	public void onStart(){
+		super.onStart();
+		isFragAlive = true;
+	}
 
+	public void onStop(){
+		super.onStop();
+		isFragAlive = false;
+	}
 
 	@Override
 	public void onResume() {
