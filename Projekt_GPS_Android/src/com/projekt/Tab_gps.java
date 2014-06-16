@@ -27,38 +27,38 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class Tab_gps  extends Fragment {
-	
+
 	private boolean firsttime;
 	static MapView mapView;
 	static GoogleMap map;
-    static MyCommunicationListener mCallback;
-    static Location MyLocation = new Location("My location");
-    static Handler handler;
-    static Circle modelcar;
+	static MyCommunicationListener mCallback;
+	static Location MyLocation = new Location("My location");
+	static Handler handler;
+	static Circle modelcar;
 	private ImageButton center_button;
-    private Thread t; // update location of modelcar
-    static boolean center_flag=false;
-  
-    // MainActivity must implement this interface
-    // For Communication between Fragment and MainActivity
-    public interface MyCommunicationListener {
-        public boolean getRecState();
-    }
+	private Thread t; // update location of modelcar
+	static boolean center_flag=false;
 
-    
+	// MainActivity must implement this interface
+	// For Communication between Fragment and MainActivity
+	public interface MyCommunicationListener {
+		public boolean getRecState();
+	}
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+
 		View v = inflater.inflate(R.layout.gps_frag, container, false);
 		center_button = (ImageButton)v.findViewById(R.id.center_button);
-		
+
 		center_button.setOnClickListener(new OnClickListener()
 		{
-		public void onClick(View v)
-		{
-			center_flag=true;
-			
-		}
+			public void onClick(View v)
+			{
+				center_flag=true;
+
+			}
 		});
 		// Gets the MapView from the XML layout and creates it
 
@@ -73,7 +73,7 @@ public class Tab_gps  extends Fragment {
 		case ConnectionResult.SUCCESS:
 			Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show(); //Gibt SUCCESS aus als "popup"
 			mapView = (MapView) v.findViewById(R.id.map);
-			
+
 			mapView.onCreate(savedInstanceState); // returns the view that has the given id in the hierarchy or null
 			// Gets to GoogleMap from the MapView and does initialization stuff
 			if(mapView!=null)
@@ -83,7 +83,7 @@ public class Tab_gps  extends Fragment {
 				map.setMapType(com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID);
 				map.getUiSettings().setMyLocationButtonEnabled(false); //Enables or disables the my-location button.
 				map.setMyLocationEnabled(true); //Enables or disables the my position in the map.
-				
+
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(48.9575483,11.4002600), 17);
 				map.animateCamera(cameraUpdate);	//animate and zoom in the map  
 
@@ -107,10 +107,10 @@ public class Tab_gps  extends Fragment {
 		//mylocation is the configuration for the Circle
 		CircleOptions mylocation = new CircleOptions().radius(3)
 				.strokeColor(Color.BLUE).fillColor(Color.WHITE).zIndex(100).center(((MainActivity)getActivity()).udpService.getCurrentLocation());
-		
+
 		modelcar=Tab_gps.map.addCircle(mylocation);
-		
-//		
+
+		//		
 		//Thread to draw the current position and path if rec is pressed
 		if(t==null)
 		{
@@ -118,12 +118,12 @@ public class Tab_gps  extends Fragment {
 			t=new Thread(new GPS_Thread());
 			t.start();
 		}
-//					
+		//					
 		return v;
 	}
-		
 
-	
+
+
 	@Override
 	public void onResume() {
 		Toast.makeText(getActivity(), "Onresume :)", Toast.LENGTH_SHORT).show();
@@ -137,37 +137,37 @@ public class Tab_gps  extends Fragment {
 		super.onResume();
 
 	}
-	
+
 	@Override
 	public void onDestroy() {
 
 		super.onDestroy();
 		mapView.onDestroy();
 	}
-	
+
 	@Override
 	public void onLowMemory() {
 
 		super.onLowMemory();
 		mapView.onLowMemory();
 	}
-	
-	
+
+
 	/*
 	 * Initialise "mCallback"
 	 * With "mCallback" you can use methodes from the main Activity
 	 */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        
-        // This makes sure that the MainActivity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (MyCommunicationListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement MyCommunicationListener");
-        }
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the MainActivity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			mCallback = (MyCommunicationListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement MyCommunicationListener");
+		}
+	}
 }
