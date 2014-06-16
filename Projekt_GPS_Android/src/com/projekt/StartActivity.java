@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-
 import android.util.Log;
 
 
@@ -98,7 +97,6 @@ public class StartActivity extends Activity implements OnClickListener {
 
         switch (i) {
             case 1:
-
                 wifi.setWifiEnabled(false);
 
                 for (Method method : wmMethods) {
@@ -123,7 +121,16 @@ public class StartActivity extends Activity implements OnClickListener {
 
     }
 
-
+    protected void onDestroy(){
+    	try {
+			turnHotSpotOnOff(2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	wifi.setWifiEnabled(true);
+    	super.onDestroy();
+    }
 
 }
 
