@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         rpm_Tab.setTabListener((TabListener) new MyTabsListener(rpm_fragment));
         gps_Tab.setTabListener((TabListener) new MyTabsListener(gps_fragment));
 
-        //add the tabs to the actionbar
+        //add the tabs to the ActionBar
         actionbar.addTab(all_Tab);
         actionbar.addTab(acc_Tab);
         actionbar.addTab(winkel_Tab);
@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         ToggleButton button = (ToggleButton) customView.findViewById(R.id.button);
         button.setOnCheckedChangeListener(this);
 
-        // If Activtiy is started after the FileChooserActivity, a Path for csv-File is delivered
+        // If Activity is started after the FileChooserActivity, a Path for csv-File is delivered
         absolutCSVPath = getIntent().getStringExtra("AbsolutFile"); // Absolute Path
         csvPath = getIntent().getStringExtra("File"); // Name of the Path
 
@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
     }
 
     /*
-     * Listener for the ActionBar(non-Javadoc)
+     * Listener for the ActionBar
      * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
      */
     @Override
@@ -252,7 +252,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         // Jump to All Tab
         actionbar.selectTab(all_Tab);
 
-        // Start Tansaction
+        // Start Transaction
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -304,13 +304,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
     }
 
     @Override
-    // For All, Acc, Angle and RPM Fragment
+    // For All, Acceleration, Angle and RPM Fragment
     public boolean getIsCSVReportSelected() {
         return isCSVReportSelected;
     }
 
     @Override
-    // For All, Acc, Angle and RPM Fragment
+    // For All, Acceleration, Angle and RPM Fragment
     public OpenCSVReport getCSVReport() {
         return csvReport;
     }
