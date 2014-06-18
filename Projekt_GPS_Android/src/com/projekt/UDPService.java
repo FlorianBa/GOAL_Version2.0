@@ -16,6 +16,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,10 @@ public class UDPService extends Service {
 
     private final static int SOF = 0x43;
 
-
+    private double startTime;
     public Socket socket;
     public DatagramSocket socketUDP;
     public static final int SERVERPORT = 4000;
-
     private MainActivity linkToParent;
 
 
@@ -38,7 +38,6 @@ public class UDPService extends Service {
 
 
     // Arrays to store received data
-
     private  List<GraphView.GraphViewData> listAccX = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
     private  List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
     private  List<GraphView.GraphViewData> listAccZ = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
@@ -52,13 +51,24 @@ public class UDPService extends Service {
     private  List<LatLng> listLocations = new ArrayList<LatLng>();
 
 
-    // Helper flag to enable external and internal persistence storing
+    //ArrrayLists for creating KML- and CSV- reports
+    private  List<GraphView.GraphViewData> listAccXsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
+    private  List<GraphView.GraphViewData> listAccYsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
+    private  List<GraphView.GraphViewData> listAccZsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
+    private  List<GraphView.GraphViewData> listrpm1saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
+    private  List<GraphView.GraphViewData> listrpm2saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
+    private  List<GraphView.GraphViewData> listrpm3saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
+    private  List<GraphView.GraphViewData> listrpm4saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
+    private  List<GraphView.GraphViewData> listAngleXsaving = new ArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
+    private  List<GraphView.GraphViewData> listAngleYsaving = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
+    private  List<GraphView.GraphViewData> listAngleZsaving = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
+    private  List<LatLng> listLocationssaving = new ArrayList<LatLng>();
 
+
+    //flag to enable saving in saving lists
     private static boolean enableSaving = false;
 
-
     // received data counter
-
    private  double timestamp = 0;
 
 
@@ -66,7 +76,6 @@ public class UDPService extends Service {
 
 
     // Binder method for connecting class to MainActivity
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
@@ -76,13 +85,11 @@ public class UDPService extends Service {
 
 
     // method to link Service
-
     public void setLink(Object parent) {
         linkToParent = (MainActivity) parent;
     }
 
     // custom binder class
-
     private final IBinder myBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
@@ -101,6 +108,8 @@ public class UDPService extends Service {
 
         socket = new Socket();
         Log.d("UDP" , "On create");
+        
+        startTime = System.currentTimeMillis();
     }
 
 
@@ -172,8 +181,12 @@ public class UDPService extends Service {
     // Callback for receiving packages over udp
 
     private void processReceivedData(DatagramPacket p) {
-
-        timestamp = (timestamp+1);
+    	
+        timestamp = System.currentTimeMillis() - startTime;
+        timestamp = timestamp/1000;
+        //timestamp = Math.round(100.0 * timestamp);
+        
+        Log.d("format", timestamp + "");
         byte[] buffer = new byte[28];
         try {
            buffer =  p.getData();
@@ -197,10 +210,16 @@ public class UDPService extends Service {
 //                        Log.d("UDP","" + value + "at:" + timestamp);
 //                        GraphView.GraphViewData graphData = new GraphView.GraphViewData(timestamp, value);
 //                        listAccX.add(graphData);
-                       listAccX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) *0.005)) ;
-                        listAccY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, false) * 0.005));
-                        listAccZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.005));
+                       listAccX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) *0.005)) ;
+                        listAccY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false) * 0.005));
+                        listAccZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 16, 17, false) * 0.005));
 
+                        //add current graph datas to savinglists
+                        if(enableSaving){
+                            listAccXsaving.add(getCurrentGraphDataAccX());
+                            listAccYsaving.add(getCurrentGraphDataAccY());
+                            listAccZsaving.add(getCurrentGraphDataAccZ());
+                        }
                         Log.d("UDP", "" + listAccX.get(listAccX.size()-1)) ;
                         Log.d("count", " " + listAccX.size());
                         break;
@@ -209,30 +228,42 @@ public class UDPService extends Service {
 //                      BO_ 22 Algo_attitude_observer: 8 Vector__XXX
 //                      SG_ RollAngle : 16|16@1- (1,0) [0|0] "grad" Vector__XXX
 //                      SG_ PitchAngle : 0|16@1- (1,0) [0|0] "grad" Vector__XXX
-                      timestamp = listAngleX.size();
-                      listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * 1.0));
-                      listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, false) * 1.0));
+                      
+                      listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) * 1.0));
+                      listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false) * 1.0));
                       //listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 1.0));
+                        if(enableSaving){
+                            listAngleXsaving.add(getCurrentGraphDataAngleX());
+                            listAngleYsaving.add(getCurrentGraphDataAngleY());
 
+                        }
 
                       break;
                         
-                    case 21:
-                    	timestamp = listAngleZ.size();
-                    	listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * (180/Math.PI)));
-                    	
+//                    case 21:
+//                    	timestamp = listAngleZ.size();
+//                    	listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * (180/Math.PI)));
+//                        if(enableSaving) {
+//                            listAngleZsaving.add(getCurrentGraphDataAngleZ());
+//                        }
                     case 18:
 
 //                        SG_ Raddrehzahl_vr : 48|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 //                        SG_ Raddrehzahl_vl : 32|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 //                        SG_ Raddrehzahl_hr : 16|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 //                        SG_ Raddrehzahl_hl : 0|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
-                        timestamp = listrpm1.size();
-                        listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, true)*0.005));
-                        listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, true)*0.005));
-                        listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, true)*0.005));
-                        listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 19, 20, true)*0.005));
-
+                        
+                        listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, true)*0.005));
+                        listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, true)*0.005));
+                        listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 16, 17, true)*0.005));
+                        listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 18, 19, true)*0.005));
+                        //add current graph datas to savinglists
+                        if(enableSaving){
+                            listrpm1saving.add(getCurrentGraphDatarpm1());
+                            listrpm2saving.add(getCurrentGraphDatarpm2());
+                            listrpm3saving.add(getCurrentGraphDatarpm3());
+                            listrpm4saving.add(getCurrentGraphDatarpm4());
+                        }
                         break;
 
                     case 19:
@@ -240,17 +271,22 @@ public class UDPService extends Service {
 //                        BO_ 19 GPS_lat_long: 8 Vector__XXX
 //                        SG_ GPS_longitude : 32|32@1+ (1E-006,0) [0|4295] "grad" Vector__XXX
 //                        SG_ GPS_latitude : 0|32@1+ (1E-006,0) [0|4295] "grad" Vector__XXX
-                        listLocations.add(new LatLng( (getValueFromBytes(buffer, 13, 16, false)*1E-006) , (getValueFromBytes(buffer, 17, 20, false) *1E-006) ));
-
+                        listLocations.add(new LatLng( (getValueFromBytes(buffer, 12, 15, false)*1E-006) , (getValueFromBytes(buffer, 16, 19, false) *1E-006) ));
+                        if(enableSaving){
+                            listLocationssaving.add(getCurrentLocation());
+                        }
                         break;
-//                    case 17:
-//                        BO_ 21 Steering_signals: 8 Vector__XXX
-//                        SG_ Steering_Volt : 16|16@1+ (8E-005,0) [0|5.2429] "V" Vector__XXX
-//                        SG_ Steering_Frontaxis : 0|16@1- (1,0) [-32768|32767] "rad" Vector__XXX
+                    case 17:
+                        //BO_ 17 IMU_GYRO: 8 Vector__XXX
+                        //SG_ Z_GYRO : 32|16@1- (0.02,0) [-327.68|327.68] "grad/s" Vector__XXX
+                        //SG_ Y_GYRO : 16|16@1- (0.02,0) [-327.68|327.68] "grad/s" Vector__XXX
+                        //SG_ X_GYRO : 0|16@1- (0.02,0) [-327.68|327.68] "grad/s" Vector__XXX
 
-//                       listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
-
-//                        break;
+                       listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
+                        if(enableSaving) {
+                           listAngleZsaving.add(getCurrentGraphDataAngleZ());
+                        }
+                        break;
                 }
             //}
 
@@ -474,11 +510,104 @@ public class UDPService extends Service {
 
 
 
-    // enables persistence storage
 
+    //getter for all saving lists
+    public List<GraphView.GraphViewData> getListAccXsaving() {
+        if (listAccXsaving.isEmpty()){
+            listAccXsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAccXsaving;
+    }
 
-    public static void SetEnableSaving(boolean state) {
+    public List<GraphView.GraphViewData> getListAccYsaving() {
+        if (listAccYsaving.isEmpty()){
+            listAccYsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAccYsaving;
+    }
+
+    public List<GraphView.GraphViewData> getListAccZsaving() {
+        if (listAccZsaving.isEmpty()){
+            listAccZsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAccZsaving;
+    }
+
+    public List<GraphView.GraphViewData> getListrpm1saving() {
+        if (listrpm1saving.isEmpty()){
+            listrpm1saving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listrpm1saving;
+    }
+
+    public List<GraphView.GraphViewData> getListrpm2saving() {
+        if (listrpm2saving.isEmpty()){
+            listrpm2saving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listrpm2saving;
+    }
+
+    public List<GraphView.GraphViewData> getListrpm3saving() {
+        if (listrpm3saving.isEmpty()){
+            listrpm3saving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listrpm3saving;
+    }
+
+    public List<GraphView.GraphViewData> getListrpm4saving() {
+        if (listrpm4saving.isEmpty()){
+            listrpm4saving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listrpm4saving;
+    }
+
+    public List<GraphView.GraphViewData> getListAngleXsaving() {
+        if (listAngleXsaving.isEmpty()){
+            listAngleXsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAngleXsaving;
+    }
+
+    public List<GraphView.GraphViewData> getListAngleYsaving() {
+        if (listAngleYsaving.isEmpty()){
+            listAngleYsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAngleYsaving;
+    }
+
+    public List<GraphView.GraphViewData> getListAngleZsaving() {
+        if (listAngleZsaving.isEmpty()){
+            listAngleZsaving.add(new GraphView.GraphViewData(0.0, 0.0));
+        }
+        return listAngleZsaving;
+    }
+
+    public List<LatLng> getAllLocationssaving() {
+        if (listLocationssaving.isEmpty()){
+            listLocationssaving.add(new LatLng(0.0, 0.0));
+        }
+        return listLocationssaving;
+    }
+
+    //set saving state
+    public void setEnableSaving(boolean state) {
         enableSaving = state;
+    }
+
+
+    //clear all saving lists, using for KML- and CSV- reports
+    public void clearSavingLists() {
+        listAccXsaving.clear();
+        listAccYsaving.clear();
+        listAccZsaving.clear();
+        listrpm1saving.clear();
+        listrpm2saving.clear();
+        listrpm3saving.clear();
+        listrpm4saving.clear();
+        listAngleXsaving.clear();
+        listAngleYsaving.clear();
+        listAngleZsaving.clear();
+        listLocationssaving.clear();
     }
 
 }

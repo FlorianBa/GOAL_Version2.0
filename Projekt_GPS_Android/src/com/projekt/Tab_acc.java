@@ -63,10 +63,12 @@ public class Tab_acc extends Fragment {
 		else{
 			// CSV-Report is selected and will be shown on Graphs
 			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
-			//series_x.resetData(report.getAllGraphDataAccX());
-			series_x.resetData(getTestSeriesData()); // Test Daten k�nnen sp�ter gel�scht werden und auch die Methode dazu
+			series_x.resetData(report.getAllGraphDataAccX());
+			//series_x.resetData(getTestSeriesData()); // Test Daten k�nnen sp�ter gel�scht werden und auch die Methode dazu
 			series_y.resetData(report.getAllGraphDataAccY());
 			series_z.resetData(report.getAllGraphDataAccZ());
+			
+			series_x.appendData(report.getAllGraphDataAccX()[report.getAllGraphDataAccX().length-1], scrollToEnd, graphDataBuffer);
 		}
 	}
 

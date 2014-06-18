@@ -35,10 +35,10 @@ public class Tab_rpm extends Fragment {
 
 		fragmentView = inflater.inflate(R.layout.rpm_frag, container, false);
 
-		generateGraph("RPM Rear Right", R.id.graph_rpm_1);
-		generateGraph("RPM Front Left", R.id.graph_rpm_2);
-		generateGraph("RPM Front Right", R.id.graph_rpm_3);
-		generateGraph("RPM Rear Left", R.id.graph_rpm_4);
+		generateGraph("RPM Rear Left", R.id.graph_rpm_1);
+		generateGraph("RPM Rear Right", R.id.graph_rpm_2);
+		generateGraph("RPM Front Left", R.id.graph_rpm_3);
+		generateGraph("RPM Front Right", R.id.graph_rpm_4);
 
 
 		return fragmentView;
