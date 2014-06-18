@@ -205,6 +205,22 @@ public class UDPService extends Service {
                         Log.d("count", " " + listAccX.size());
                         break;
 
+                    case 22:
+//                      BO_ 22 Algo_attitude_observer: 8 Vector__XXX
+//                      SG_ RollAngle : 16|16@1- (1,0) [0|0] "grad" Vector__XXX
+//                      SG_ PitchAngle : 0|16@1- (1,0) [0|0] "grad" Vector__XXX
+                      timestamp = listAngleX.size();
+                      listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * 1.0));
+                      listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, false) * 1.0));
+                      //listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 1.0));
+
+
+                      break;
+                        
+                    case 21:
+                    	timestamp = listAngleZ.size();
+                    	listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * (180/Math.PI)));
+                    	
                     case 18:
 
 //                        SG_ Raddrehzahl_vr : 48|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
@@ -212,22 +228,10 @@ public class UDPService extends Service {
 //                        SG_ Raddrehzahl_hr : 16|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 //                        SG_ Raddrehzahl_hl : 0|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
                         timestamp = listrpm1.size();
-                        listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false)*0.005));
-                        listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, false)*0.005));
-                        listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false)*0.005));
-                        listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 19, 20, false)*0.005));
-
-                        break;
-
-                    case 22:
-//                        BO_ 22 Algo_attitude_observer: 8 Vector__XXX
-//                        SG_ RollAngle : 16|16@1- (1,0) [0|0] "grad" Vector__XXX
-//                        SG_ PitchAngle : 0|16@1- (1,0) [0|0] "grad" Vector__XXX
-                        timestamp = listAngleX.size();
-                        listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * 1.0));
-                        listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, false) * 1.0));
-                        //listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 1.0));
-
+                        listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, true)*0.005));
+                        listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 15, 16, true)*0.005));
+                        listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, true)*0.005));
+                        listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 19, 20, true)*0.005));
 
                         break;
 
@@ -239,14 +243,14 @@ public class UDPService extends Service {
                         listLocations.add(new LatLng( (getValueFromBytes(buffer, 13, 16, false)*1E-006) , (getValueFromBytes(buffer, 17, 20, false) *1E-006) ));
 
                         break;
-                    case 17:
+//                    case 17:
 //                        BO_ 21 Steering_signals: 8 Vector__XXX
 //                        SG_ Steering_Volt : 16|16@1+ (8E-005,0) [0|5.2429] "V" Vector__XXX
 //                        SG_ Steering_Frontaxis : 0|16@1- (1,0) [-32768|32767] "rad" Vector__XXX
 
-                        listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
+//                       listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
 
-                        break;
+//                        break;
                 }
             //}
 
