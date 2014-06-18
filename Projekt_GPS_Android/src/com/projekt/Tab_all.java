@@ -244,7 +244,7 @@ public class Tab_all extends Fragment {
 		graphView.setViewPort(0, 100);
 		graphView.setScalable(true);
 		graphView.setScrollable(true);
-		graphView.setManualYAxisBounds(4, 0);
+		//graphView.setManualYAxisBounds(4, 0);
 		graphView.getGraphViewStyle().setNumHorizontalLabels(3);
 		graphView.getGraphViewStyle().setNumVerticalLabels(3);
 		graphView.setShowLegend(true);

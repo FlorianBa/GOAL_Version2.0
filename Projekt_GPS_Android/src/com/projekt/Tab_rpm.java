@@ -35,10 +35,11 @@ public class Tab_rpm extends Fragment {
 
 		fragmentView = inflater.inflate(R.layout.rpm_frag, container, false);
 
-		generateGraph("rpm 1", R.id.graph_rpm_1);
-		generateGraph("rpm 2", R.id.graph_rpm_2);
-		generateGraph("rpm 3", R.id.graph_rpm_3);
-		generateGraph("rpm 4", R.id.graph_rpm_4);
+		generateGraph("RPM Rear Right", R.id.graph_rpm_1);
+		generateGraph("RPM Front Left", R.id.graph_rpm_2);
+		generateGraph("RPM Front Right", R.id.graph_rpm_3);
+		generateGraph("RPM Rear Left", R.id.graph_rpm_4);
+
 
 		return fragmentView;
 	}
@@ -193,7 +194,7 @@ public class Tab_rpm extends Fragment {
 		graphView.setViewPort(0, 100);
 		graphView.setScalable(true);
 		graphView.setScrollable(true);
-		graphView.setManualYAxisBounds(4, 0);
+		//graphView.setManualYAxisBounds(4, 0);
 		graphView.getGraphViewStyle().setNumHorizontalLabels(3);
 		graphView.getGraphViewStyle().setNumVerticalLabels(3);
 
