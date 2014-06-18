@@ -300,8 +300,7 @@ public class UDPService extends Service {
     // static function: processing byte values of CAN frames
 
 
-    public static Double getValueFromBytes(byte[] buffer,
-                                           int startByte, int endByte, Boolean byteIsUnsigned) {
+    public static Double getValueFromBytes(byte[] buffer, int startByte, int endByte, Boolean byteIsUnsigned) {
 
         Double result = new Double(0.0);
 

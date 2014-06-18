@@ -18,7 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-
+/*
+ * RPM 1 --> Rear Left
+ * RPM 2 --> Rear Right
+ * RPM 3 --> Front Left
+ * RPM 4 --> Front Right
+ */
 public class Tab_all extends Fragment {
 
 	private GraphViewSeries series_acc_x,
@@ -38,7 +43,7 @@ public class Tab_all extends Fragment {
 	private final Handler mHandler = new Handler();
 	private View fragmentView;
 	private volatile boolean isFragAlive;
-	private MyCSVReportListener mCallback;
+	private MyCSVReportInterface mCallback;
 
 
 	@Override
@@ -46,9 +51,9 @@ public class Tab_all extends Fragment {
 
 		fragmentView = inflater.inflate(R.layout.all_frag, container, false);
 
-		generateGraph("Acceleration", R.id.graph_all_acc);
-		generateGraph("Angle", R.id.graph_all_angle);
-		generateGraph("RPM", R.id.graph_all_rpm);
+		generateGraph("Acceleration in m/s²", R.id.graph_all_acc);
+		generateGraph("Angle in degree", R.id.graph_all_angle);
+		generateGraph("RPM in 1/s", R.id.graph_all_rpm);
 
 		return fragmentView;
 	}
@@ -58,7 +63,9 @@ public class Tab_all extends Fragment {
 		isFragAlive = true;
 
 		if(mCallback.getIsCSVReportSelected() == false){
-			// No CSV-Report is selected and the normal Measurement will start
+			/*
+			 *  No CSV-Report is selected and the normal Measurement will start
+			 */
 
 			if(((MainActivity)getActivity()).udpService != null){
 				// Acceleration
@@ -84,8 +91,10 @@ public class Tab_all extends Fragment {
 			appendGraphData(R.id.graph_all_rpm);
 		}
 		else{
-			// CSV-Report is selected and will be shown on Graphs
-			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
+			/*
+			 *  CSV-Report is selected and will be shown on Graphs
+			 */
+			OpenCSVReport report = mCallback.getCSVReport();
 
 			// Acceleration
 			series_acc_x.resetData(report.getAllGraphDataAccX());
@@ -102,12 +111,30 @@ public class Tab_all extends Fragment {
 			series_rpm_2.resetData(report.getAllGraphDatarpm2());
 			series_rpm_3.resetData(report.getAllGraphDatarpm3());
 			series_rpm_4.resetData(report.getAllGraphDatarpm4());
+			
+			
+			// This is necessary to show the GraphViewData
+			// Without you can not see anything until you touch the graph
+			// Only the last graph data will drawn
+			series_acc_x.appendData(report.getAllGraphDataAccX()[report.getAllGraphDataAccX().length-1], scrollToEnd, graphDataBuffer);
+			series_acc_y.appendData(report.getAllGraphDataAccY()[report.getAllGraphDataAccY().length-1], scrollToEnd, graphDataBuffer);
+			series_acc_z.appendData(report.getAllGraphDataAccZ()[report.getAllGraphDataAccZ().length-1], scrollToEnd, graphDataBuffer);
+			
+			series_angle_x.appendData(report.getAllGraphDataAngleX()[report.getAllGraphDataAngleX().length-1], scrollToEnd, graphDataBuffer);
+			series_angle_y.appendData(report.getAllGraphDataAngleY()[report.getAllGraphDataAngleY().length-1], scrollToEnd, graphDataBuffer);
+			series_angle_z.appendData(report.getAllGraphDataAngleZ()[report.getAllGraphDataAngleZ().length-1], scrollToEnd, graphDataBuffer);
+			
+			series_rpm_1.appendData(report.getAllGraphDatarpm1()[report.getAllGraphDatarpm1().length-1], scrollToEnd, graphDataBuffer);
+			series_rpm_2.appendData(report.getAllGraphDatarpm2()[report.getAllGraphDatarpm2().length-1], scrollToEnd, graphDataBuffer);
+			series_rpm_3.appendData(report.getAllGraphDatarpm3()[report.getAllGraphDatarpm3().length-1], scrollToEnd, graphDataBuffer);
+			series_rpm_4.appendData(report.getAllGraphDatarpm4()[report.getAllGraphDatarpm4().length-1], scrollToEnd, graphDataBuffer);
+
 		}
 	}
 
 
 	/*
-	 *  Methode zum Anhï¿½ngen von Daten an Graphen
+	 *  Append graph data in a thread
 	 */
 	private void appendGraphData(int id) {
 
@@ -169,6 +196,13 @@ public class Tab_all extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
+						
+						/*
+						 * RPM 1 --> Rear Left
+						 * RPM 2 --> Rear Right
+						 * RPM 3 --> Front Left
+						 * RPM 4 --> Front Right
+						 */
 						if(((MainActivity)getActivity()).udpService != null) {
 							GraphViewData data1 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm1();
 							GraphViewData data2 = ((MainActivity)getActivity()).udpService.getCurrentGraphDatarpm2();
@@ -192,16 +226,14 @@ public class Tab_all extends Fragment {
 			};
 			mHandler.postDelayed(mTimerRPM, delayThread);
 			break;
-
-
-
 		}
 	}
 
 
 	/*
-	 *  Methode zum Initialisieren eines Graphen
+	 *  Initialize GraphView
 	 */
+	@SuppressWarnings("deprecation")
 	private void generateGraph(String name, int id){
 		GraphView graphView = new LineGraphView(this.getActivity(), name);
 		GraphViewData[] initData = new GraphViewData[]{new GraphViewData(0, 0)};
@@ -230,14 +262,22 @@ public class Tab_all extends Fragment {
 			break;
 
 		case R.id.graph_all_rpm:
-			series_rpm_1 = new GraphViewSeries("1", styleRed,initData);
-			series_rpm_2 = new GraphViewSeries("2", styleBlue,initData);
-			series_rpm_3 = new GraphViewSeries("3", styleGreen,initData);
-			series_rpm_4 = new GraphViewSeries("4", styleMagenta,initData);
+			/*
+			 * RPM 1 --> Rear Left
+			 * RPM 2 --> Rear Right
+			 * RPM 3 --> Front Left
+			 * RPM 4 --> Front Right
+			 */
+			series_rpm_1 = new GraphViewSeries("Rear Left", styleRed,initData);
+			series_rpm_2 = new GraphViewSeries("Rear Right", styleBlue,initData);
+			series_rpm_3 = new GraphViewSeries("Front Left", styleGreen,initData);
+			series_rpm_4 = new GraphViewSeries("Front Right", styleMagenta,initData);
 			graphView.addSeries(series_rpm_1);
 			graphView.addSeries(series_rpm_2);
 			graphView.addSeries(series_rpm_3);
 			graphView.addSeries(series_rpm_4);
+			
+			graphView.setLegendWidth(200);
 			break;
 		}
 
@@ -260,8 +300,8 @@ public class Tab_all extends Fragment {
 	}
 
 	/*
-	 * Initialise "mCallback"
-	 * With "mCallback" you can use methodes from the main Activity
+	 * Initialize "mCallback"
+	 * With "mCallback" you can use methods from the main Activity
 	 */
 	@Override
 	public void onAttach(Activity activity) {
@@ -270,7 +310,7 @@ public class Tab_all extends Fragment {
 		// This makes sure that the MainActivity has implemented
 		// the callback interface. If not, it throws an exception
 		try {
-			mCallback = (MyCSVReportListener) activity;
+			mCallback = (MyCSVReportInterface) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement MyCSVReportListener");

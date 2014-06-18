@@ -32,7 +32,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Intent;
 
-public class MainActivity extends Activity implements OnCheckedChangeListener, Tab_gps.MyCommunicationListener, MyCSVReportListener{
+public class MainActivity extends Activity implements OnCheckedChangeListener, Tab_gps.MyCommunicationListener, MyCSVReportInterface{
     public static Context appContext;
     private ActionBar actionbar;
     private View customView;
@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
     private String csvPath, absolutCSVPath;
     private boolean isCSVReportSelected = false;
     private boolean isRecPressed = false;
+    private OpenCSVReport csvReport;
     public UDPService udpService;
 
     /** Called when the activity is first created. */
@@ -107,6 +108,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         else{
             text.setText("Selected File: " + csvPath);
             isCSVReportSelected = true;
+            csvReport = new OpenCSVReport(absolutCSVPath);
         }
 
         // Service start
@@ -172,14 +174,20 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         return udpService;
     }
 
-    //Listener for the ActionBar
+    /*
+     * Listener for the ActionBar(non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case android.R.id.home: // Back-Button
+        
+        	// Case: Back-Button was pressed
+            case android.R.id.home:
 
                 // Ask User before finish the Activity
+            	// Show Dialog
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.ic_launcher)
                         .setTitle("Do you really want to finish measurement?")
@@ -187,6 +195,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
                                 new DialogInterface.OnClickListener(){
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                    	// finish Activity if OK was pressed
                                         finish();
                                     }
                                 })
@@ -195,19 +204,24 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         // Action for Cancel-Button
+                                    	// At the moment there is no action
                                     }
                                 })
                         .show();
                 return true;
 
+            // Case: Load File was pressed
             case R.id.load_file:
+            	// Start File Browser
                 startActivity(new Intent(this, FileChooserActivity.class));
                 return true;
 
+            // Case: Continue Measurement was pressed    
             case R.id.continue_measurement:
                 if(isCSVReportSelected){
                     text.setText("Measurement is running");
                     isCSVReportSelected = false;
+                    csvReport = null;
                     restartFragments();
                 }
                 return true;
@@ -215,7 +229,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         return super.onOptionsItemSelected(item);
     }
 
-
+    
+    /*
+     * Add Items Load File and Continue Measurement from XML
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /** Create an option menu from res/menu/actionbar_items.xml */
@@ -223,6 +241,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         return super.onCreateOptionsMenu(menu);
     }
 
+    
+    /*
+     * Restart Fragment
+     * At first jump to All Tab
+     * Then restart All Tab
+     * The Graphs will rebuild
+     */
     private void restartFragments(){
         // Jump to All Tab
         actionbar.selectTab(all_Tab);
@@ -240,12 +265,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         fragmentTransaction.commit();
     }
 
-
+    /*
+     * Listener for Back-Button (Soft-Key)
+     * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         // Ask User before finish the Activity
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	// Show Dialog
             new AlertDialog.Builder(this)
                     .setIcon(R.drawable.ic_launcher)
                     .setTitle("Do you really want to finish measurement?")
@@ -282,7 +311,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
 
     @Override
     // For All, Acc, Angle and RPM Fragment
-    public String getAbsolutCSVPath() {
-        return absolutCSVPath;
+    public OpenCSVReport getCSVReport() {
+        return csvReport;
     }
 }

@@ -28,7 +28,7 @@ public class Tab_winkel extends Fragment {
 	private final Handler mHandler = new Handler();
 	private View fragmentView;
 	private volatile boolean isFragAlive;
-	private MyCSVReportListener mCallback;
+	private MyCSVReportInterface mCallback;
 
 
 	@Override
@@ -36,9 +36,9 @@ public class Tab_winkel extends Fragment {
 
 		fragmentView = inflater.inflate(R.layout.winkel_frag, container, false);
 
-		generateGraph("Angle X", R.id.graph_angle_x);
-		generateGraph("Angle y", R.id.graph_angle_y);
-		generateGraph("Angle z", R.id.graph_angle_z);
+		generateGraph("Angle X in degree", R.id.graph_angle_x);
+		generateGraph("Angle Y in degree", R.id.graph_angle_y);
+		generateGraph("Angle Z in degree", R.id.graph_angle_z);
 
 		return fragmentView;
 	}
@@ -49,7 +49,9 @@ public class Tab_winkel extends Fragment {
 		isFragAlive = true;
 
 		if(mCallback.getIsCSVReportSelected() == false){
-			// No CSV-Report is selected and the normal Measurement will start
+			/*
+			 *  No CSV-Report is selected and the normal Measurement will start
+			 */
 
 			if(((MainActivity)getActivity()).udpService != null){
 				series_x.resetData(((MainActivity)getActivity()).udpService.getAllGraphDataAngleX());
@@ -63,17 +65,27 @@ public class Tab_winkel extends Fragment {
 			appendGraphData(R.id.graph_angle_z);
 		}
 		else{
-			// CSV-Report is selected and will be shown on Graphs
-			OpenCSVReport report = new OpenCSVReport(mCallback.getAbsolutCSVPath());
+			/*
+			 *  CSV-Report is selected and will be shown on Graphs
+			 */
+			OpenCSVReport report = mCallback.getCSVReport();
 
 			series_x.resetData(report.getAllGraphDataAngleX());
 			series_y.resetData(report.getAllGraphDataAngleY());
 			series_z.resetData(report.getAllGraphDataAngleZ());
+			
+			
+			// This is necessary to show the GraphViewData
+			// Without you can not see anything until you touch the graph
+			// Only the last graph data will drawn
+			series_x.appendData(report.getAllGraphDataAngleX()[report.getAllGraphDataAngleX().length-1], scrollToEnd, graphDataBuffer);
+			series_y.appendData(report.getAllGraphDataAngleY()[report.getAllGraphDataAngleY().length-1], scrollToEnd, graphDataBuffer);
+			series_z.appendData(report.getAllGraphDataAngleZ()[report.getAllGraphDataAngleZ().length-1], scrollToEnd, graphDataBuffer);
 		}
 	}
 
 	/*
-	 *  Methode zum Anh�ngen von Daten an Graphen
+	 *  Append graph data in a thread
 	 */
 	private void appendGraphData(int id) {
 
@@ -136,7 +148,7 @@ public class Tab_winkel extends Fragment {
 
 
 	/*
-	 *  Methode zum Initialisieren eines Graphen
+	 *  Initialize GraphView
 	 */
 	private void generateGraph(String name, int id){
 		GraphView graphView = new LineGraphView(this.getActivity(), name);
@@ -180,8 +192,8 @@ public class Tab_winkel extends Fragment {
 	}
 
 	/*
-	 * Initialise "mCallback"
-	 * With "mCallback" you can use methodes from the main Activity
+	 * Initialize "mCallback"
+	 * With "mCallback" you can use methods from the main Activity
 	 */
 	@Override
 	public void onAttach(Activity activity) {
@@ -190,7 +202,7 @@ public class Tab_winkel extends Fragment {
 		// This makes sure that the MainActivity has implemented
 		// the callback interface. If not, it throws an exception
 		try {
-			mCallback = (MyCSVReportListener) activity;
+			mCallback = (MyCSVReportInterface) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement MyCSVReportListener");
