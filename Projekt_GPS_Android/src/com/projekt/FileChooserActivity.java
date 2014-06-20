@@ -7,6 +7,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-
+/*
+ * This Class is a File Browser
+ * The User can search CSV Files 
+ * Only CSV Files will be shown
+ */
 @SuppressLint("DefaultLocale")
 public class FileChooserActivity extends ListActivity {
 
@@ -30,6 +35,7 @@ public class FileChooserActivity extends ListActivity {
 	private TextView myPath;
 	private String currentParent = root;
 	private Context con = this;
+	private ProgressDialog progress;
 
 	/** Called when the activity is first created. */
 
@@ -38,6 +44,8 @@ public class FileChooserActivity extends ListActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_file_chooser);
+
+		progress = new ProgressDialog(this);
 
 		myPath = (TextView)findViewById(R.id.path);
 		getDir(root);
@@ -74,7 +82,7 @@ public class FileChooserActivity extends ListActivity {
 			}
 			else{
 				String fileTyp = file.getName().toLowerCase().substring(file.getName().lastIndexOf(".")+1);
-				
+
 				// Only csv-Files will be shown
 				if(fileTyp.equals("csv")){
 					item.add(file.getName());
@@ -132,6 +140,8 @@ public class FileChooserActivity extends ListActivity {
 						// For csv-Files
 						Log.d(TAG, filePath);
 
+						loadingProgress(true); // show ProgressDialog
+
 						Intent i = new Intent();
 						i.setClass(con, MainActivity.class);
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Remove Activity from Backstack
@@ -169,6 +179,7 @@ public class FileChooserActivity extends ListActivity {
 	}
 
 
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -180,5 +191,30 @@ public class FileChooserActivity extends ListActivity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	/*
+	 * Initialize ProgressDialog and show it so long as onStop is called
+	 * Loading CSV File can take same time
+	 * Finally dismiss Dialog
+	 */
+	private void loadingProgress(boolean state){
+		if(state){
+			progress.setTitle("Loading CSV File...");
+			progress.setMessage("Please wait while loading...");
+			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progress.setIndeterminate(true);
+			progress.setCanceledOnTouchOutside(false);
+			progress.setCancelable(true);
+			progress.show();
+		}
+		else
+			progress.dismiss();
+	}
+	
+	
+	protected void onStop(){
+		super.onStop();
+		loadingProgress(false);
 	}
 }
