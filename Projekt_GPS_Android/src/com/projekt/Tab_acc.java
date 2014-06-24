@@ -1,6 +1,7 @@
 package com.projekt;
 
 
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -178,7 +179,19 @@ public class Tab_acc extends Fragment {
 		//graphView.setManualYAxisBounds(4, 0);
 		graphView.getGraphViewStyle().setNumHorizontalLabels(3);
 		graphView.getGraphViewStyle().setNumVerticalLabels(3);
-
+		
+		// Show seconds on x-Axis
+		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+	        @Override
+	        public String formatLabel(double value, boolean isValueX) {
+	            // TODO Auto-generated method stub
+	            if (isValueX) {
+	                return Math.round(value*100.0)/100.0 + "s";
+	            }
+	            return "" + Math.round(value*100.0)/100.0;
+	        }
+	    });
+		
 		LinearLayout layout = (LinearLayout) fragmentView.findViewById(id);
 		layout.addView(graphView);
 	}

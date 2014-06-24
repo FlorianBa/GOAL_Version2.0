@@ -13,9 +13,10 @@
         android:orientation="vertical" >
 
         <ImageView
-            android:layout_width="600dp"
-            android:layout_height="500dp"
-            android:src="@drawable/thi_logo2" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/thi_logo_gross" >
         </ImageView>
     </LinearLayout>
 
@@ -31,7 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Start" >
+            android:text="Start"
+            android:textSize="30sp" >
         </Button>
 
         <Button
@@ -39,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Settings" >
+            android:text="Settings"
+            android:textSize="30sp" >
         </Button>
     </LinearLayout>
 

@@ -1,8 +1,10 @@
 package com.projekt;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.LegendAlign;
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /*
  * RPM 1 --> Rear Left
@@ -44,6 +47,7 @@ public class Tab_all extends Fragment {
 	private View fragmentView;
 	private volatile boolean isFragAlive;
 	private MyCSVReportInterface mCallback;
+	private TextView kalmanGPSView, normalGPSView;
 
 
 	@Override
@@ -54,6 +58,9 @@ public class Tab_all extends Fragment {
 		generateGraph("Acceleration in m/s²", R.id.graph_all_acc);
 		generateGraph("Angle in degree", R.id.graph_all_angle);
 		generateGraph("RPM in 1/s", R.id.graph_all_rpm);
+
+		kalmanGPSView = (TextView)	fragmentView.findViewById(R.id.kalmanGPS);
+		normalGPSView = (TextView)	fragmentView.findViewById(R.id.normalGPS);
 
 		return fragmentView;
 	}
@@ -83,12 +90,15 @@ public class Tab_all extends Fragment {
 				series_rpm_2.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm2());
 				series_rpm_3.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm3());
 				series_rpm_4.resetData(((MainActivity)getActivity()).udpService.getAllGraphDatarpm4());
+
 			}
-			
+
 			// Append Data
 			appendGraphData(R.id.graph_all_acc);
 			appendGraphData(R.id.graph_all_angle);
 			appendGraphData(R.id.graph_all_rpm);
+			
+			refreshGPSPositions();
 		}
 		else{
 			/*
@@ -111,27 +121,63 @@ public class Tab_all extends Fragment {
 			series_rpm_2.resetData(report.getAllGraphDatarpm2());
 			series_rpm_3.resetData(report.getAllGraphDatarpm3());
 			series_rpm_4.resetData(report.getAllGraphDatarpm4());
-			
-			
+
+
 			// This is necessary to show the GraphViewData
 			// Without you can not see anything until you touch the graph
 			// Only the last graph data will drawn
 			series_acc_x.appendData(report.getAllGraphDataAccX()[report.getAllGraphDataAccX().length-1], scrollToEnd, graphDataBuffer);
 			series_acc_y.appendData(report.getAllGraphDataAccY()[report.getAllGraphDataAccY().length-1], scrollToEnd, graphDataBuffer);
 			series_acc_z.appendData(report.getAllGraphDataAccZ()[report.getAllGraphDataAccZ().length-1], scrollToEnd, graphDataBuffer);
-			
+
 			series_angle_x.appendData(report.getAllGraphDataAngleX()[report.getAllGraphDataAngleX().length-1], scrollToEnd, graphDataBuffer);
 			series_angle_y.appendData(report.getAllGraphDataAngleY()[report.getAllGraphDataAngleY().length-1], scrollToEnd, graphDataBuffer);
 			series_angle_z.appendData(report.getAllGraphDataAngleZ()[report.getAllGraphDataAngleZ().length-1], scrollToEnd, graphDataBuffer);
-			
+
 			series_rpm_1.appendData(report.getAllGraphDatarpm1()[report.getAllGraphDatarpm1().length-1], scrollToEnd, graphDataBuffer);
 			series_rpm_2.appendData(report.getAllGraphDatarpm2()[report.getAllGraphDatarpm2().length-1], scrollToEnd, graphDataBuffer);
 			series_rpm_3.appendData(report.getAllGraphDatarpm3()[report.getAllGraphDatarpm3().length-1], scrollToEnd, graphDataBuffer);
 			series_rpm_4.appendData(report.getAllGraphDatarpm4()[report.getAllGraphDatarpm4().length-1], scrollToEnd, graphDataBuffer);
 
+			if(((MainActivity)getActivity()).udpService != null){
+				double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
+				double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+
+				double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
+				double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+
+				kalmanGPSView.setText("Normal GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
+				normalGPSView.setText("Normal GPS:\nLongitude = " + normalLongitude + "\nLatitude = " + normalLatitude);
+			}
 		}
 	}
 
+	/*
+	 * Show current GPS Positions in the TextViews
+	 */
+	private void refreshGPSPositions() {
+		Runnable gpsThread = new Runnable() {
+			@Override
+			public void run() {
+				if(isFragAlive){
+					if(((MainActivity)getActivity()).udpService != null) {
+						
+						double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
+						double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+
+						double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
+						double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+
+						kalmanGPSView.setText("Normal GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
+						normalGPSView.setText("Normal GPS:\nLongitude = " + normalLongitude + "\nLatitude = " + normalLatitude);
+					}
+					mHandler.postDelayed(this, refreshRate);
+				}
+
+			}
+		};
+		mHandler.postDelayed(gpsThread, delayThread);		
+	}
 
 	/*
 	 *  Append graph data in a thread
@@ -196,7 +242,7 @@ public class Tab_all extends Fragment {
 				@Override
 				public void run() {
 					if(isFragAlive){
-						
+
 						/*
 						 * RPM 1 --> Rear Left
 						 * RPM 2 --> Rear Right
@@ -276,7 +322,7 @@ public class Tab_all extends Fragment {
 			graphView.addSeries(series_rpm_2);
 			graphView.addSeries(series_rpm_3);
 			graphView.addSeries(series_rpm_4);
-			
+
 			graphView.setLegendWidth(200);
 			break;
 		}
@@ -289,6 +335,18 @@ public class Tab_all extends Fragment {
 		graphView.getGraphViewStyle().setNumVerticalLabels(3);
 		graphView.setShowLegend(true);
 		graphView.setLegendAlign(LegendAlign.BOTTOM);
+
+		// Show seconds on x-Axis
+		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+			@Override
+			public String formatLabel(double value, boolean isValueX) {
+				// TODO Auto-generated method stub
+				if (isValueX) {
+					return Math.round(value*100.0)/100.0 + "s";
+				}
+				return "" + Math.round(value*100.0)/100.0;
+			}
+		});
 
 		LinearLayout layout = (LinearLayout) fragmentView.findViewById(id);
 		layout.addView(graphView);
