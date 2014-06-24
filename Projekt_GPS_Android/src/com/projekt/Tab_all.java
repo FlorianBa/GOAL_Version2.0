@@ -146,7 +146,7 @@ public class Tab_all extends Fragment {
 				double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
 				double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
 
-				kalmanGPSView.setText("Normal GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
+				kalmanGPSView.setText("Kalman GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
 				normalGPSView.setText("Normal GPS:\nLongitude = " + normalLongitude + "\nLatitude = " + normalLatitude);
 			}
 		}
@@ -168,7 +168,7 @@ public class Tab_all extends Fragment {
 						double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
 						double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
 
-						kalmanGPSView.setText("Normal GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
+						kalmanGPSView.setText("Kalman GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
 						normalGPSView.setText("Normal GPS:\nLongitude = " + normalLongitude + "\nLatitude = " + normalLatitude);
 					}
 					mHandler.postDelayed(this, refreshRate);
