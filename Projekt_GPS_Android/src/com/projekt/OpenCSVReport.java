@@ -9,6 +9,11 @@ import java.util.List;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
+/**
+ * class to open the CSV-report
+ * 
+ * @author Aschenauer Dominic
+ */
 public class OpenCSVReport {
 
 	public List<GraphViewData> listAccX = new ArrayList<GraphViewData>();
@@ -21,18 +26,25 @@ public class OpenCSVReport {
 	public List<GraphViewData> listAngleX = new ArrayList<GraphViewData>();
 	public List<GraphViewData> listAngleY = new ArrayList<GraphViewData>();
 	public List<GraphViewData> listAngleZ = new ArrayList<GraphViewData>();
-
+	
+	/**
+	 * method to open csv-file
+	 * @param pathCsvFile
+	 */
 	public OpenCSVReport(String pathCsvFile) {
 		
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
 		String[] data = null;
-		List<Double> listTime = new ArrayList<Double>();
+		List<Double> listTimeAcc = new ArrayList<Double>();
+		List<Double> listTimeRpm = new ArrayList<Double>();
+		List<Double> listTimeAngleXY = new ArrayList<Double>();
+		List<Double> listTimeAngleZ = new ArrayList<Double>();
 
 		try {
 			
-			//read selected file
+			// read selected file
 			br = new BufferedReader(new FileReader(pathCsvFile));
 			while ((line = br.readLine()) != null) {
 
@@ -40,34 +52,22 @@ public class OpenCSVReport {
 				data = line.split(cvsSplitBy);
 				int timeCounter = 0;
 				
-				//save data in correct list
-				if(data[0].compareTo("time") == 0){
+				// save data in correct list
+				if(data[0].compareTo("time for acc") == 0){
 					for(String s: data){
-						if(s.compareTo("time") != 0){
+						if(s.compareTo("time for acc") != 0){
 							try {
-								listTime.add(Double.parseDouble(s));
+								listTimeAcc.add(Double.parseDouble(s));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
 						}
 					}
-				}else if(data[0].compareTo("Acc_X") == 0){
+				}else if(data[0].compareTo("acc_X") == 0){
 					for(String s: data){
-						if(s.compareTo("Acc_X") != 0){
+						if(s.compareTo("acc_X") != 0){
 							try {
-								listAccX.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							} catch (IndexOutOfBoundsException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}else if(data[0].compareTo("Acc_Y") == 0){
-					for(String s: data){
-						if(s.compareTo("Acc_Y") != 0){
-							try {
-								listAccY.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listAccX.add(new GraphViewData(listTimeAcc.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -75,11 +75,11 @@ public class OpenCSVReport {
 							}
 						}
 					}
-				}else if(data[0].compareTo("Acc_Z") == 0){
+				}else if(data[0].compareTo("acc_Y") == 0){
 					for(String s: data){
-						if(s.compareTo("Acc_Y") != 0){
+						if(s.compareTo("acc_Y") != 0){
 							try {
-								listAccZ.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listAccY.add(new GraphViewData(listTimeAcc.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -87,11 +87,33 @@ public class OpenCSVReport {
 							}
 						}
 					}
+				}else if(data[0].compareTo("acc_Z") == 0){
+					for(String s: data){
+						if(s.compareTo("acc_Z") != 0){
+							try {
+								listAccZ.add(new GraphViewData(listTimeAcc.get(timeCounter++), Double.parseDouble(s)));
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IndexOutOfBoundsException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}else if(data[0].compareTo("time for rpm") == 0){
+						for(String s: data){
+							if(s.compareTo("time for rpm") != 0){
+								try {
+									listTimeRpm.add(Double.parseDouble(s));
+								} catch (NumberFormatException e) {
+									e.printStackTrace();
+								}
+							}
+						}
 				}else if(data[0].compareTo("rpm_1") == 0){
 					for(String s: data){
 						if(s.compareTo("rpm_1") != 0){
 							try {
-								listrpm1.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listrpm1.add(new GraphViewData(listTimeRpm.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -103,7 +125,7 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_2") != 0){
 							try {
-								listrpm2.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listrpm2.add(new GraphViewData(listTimeRpm.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -115,7 +137,7 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_3") != 0){
 							try {
-								listrpm3.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listrpm3.add(new GraphViewData(listTimeRpm.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -127,10 +149,20 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("rpm_4") != 0){
 							try {
-								listrpm4.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listrpm4.add(new GraphViewData(listTimeRpm.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}else if(data[0].compareTo("time for angle_X_Y") == 0){
+					for(String s: data){
+						if(s.compareTo("time for angle_X_Y") != 0){
+							try {
+								listTimeAngleXY.add(Double.parseDouble(s));
+							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
 						}
@@ -139,7 +171,7 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_X") != 0){
 							try {
-								listAngleX.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listAngleX.add(new GraphViewData(listTimeAngleXY.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -151,10 +183,20 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_Y") != 0){
 							try {
-								listAngleY.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listAngleY.add(new GraphViewData(listTimeAngleXY.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}else if(data[0].compareTo("time for angle_Z") == 0){
+					for(String s: data){
+						if(s.compareTo("time for angle_Z") != 0){
+							try {
+								listTimeAngleZ.add(Double.parseDouble(s));
+							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
 						}
@@ -163,7 +205,7 @@ public class OpenCSVReport {
 					for(String s: data){
 						if(s.compareTo("angle_Z") != 0){
 							try {
-								listAngleZ.add(new GraphViewData(listTime.get(timeCounter++), Double.parseDouble(s)));
+								listAngleZ.add(new GraphViewData(listTimeAngleZ.get(timeCounter++), Double.parseDouble(s)));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (IndexOutOfBoundsException e) {
@@ -188,6 +230,8 @@ public class OpenCSVReport {
 			}
 		}
 	}
+	
+	// Link methods for retrieving stored values
 	
 	public GraphViewData getCurrentGraphDataAccX(){
 		if(!listAccX.isEmpty())

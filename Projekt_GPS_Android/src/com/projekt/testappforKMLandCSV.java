@@ -24,7 +24,11 @@ public class testappforKMLandCSV {
         gpsCoo.add(new LatLng(11.43469041823783, 48.76697337532911));
         gpsCoo.add(new LatLng(11.43473507300667, 48.76687325554991));
         gpsCoo.add(new LatLng(11.43493153749986, 48.76685781700431));
-        KMLReport.createKML(gpsCoo);
+        List<LatLng> gpsCooKal = new ArrayList<LatLng>();
+        gpsCooKal.add(new LatLng(11.4340000089386,48.76689418140901));
+        gpsCooKal.add(new LatLng(11.43422217174517,48.76707996169954));
+        gpsCooKal.add(new LatLng(11.4347649830117,48.76696291738272));
+        KMLReport.createKML(gpsCoo, gpsCooKal);
         
         List<GraphViewData> listAccX = new ArrayList<GraphViewData>();
     	List<GraphViewData> listAccY = new ArrayList<GraphViewData>();
@@ -92,7 +96,7 @@ public class testappforKMLandCSV {
 		
 		try {
 			CSVReport.createCSVReport(listAccX, listAccY, listAccZ, listrpm1, listrpm2,
-					listrpm3, listrpm4, listAngleX, listAngleY, listAngleY, gpsCoo);
+					listrpm3, listrpm4, listAngleX, listAngleY, listAngleY, gpsCoo, gpsCooKal);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

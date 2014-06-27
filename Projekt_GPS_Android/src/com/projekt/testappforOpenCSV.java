@@ -15,6 +15,8 @@ public class testappforOpenCSV {
 		
 		List<LatLng> gpsCoo = new ArrayList<LatLng>();
         gpsCoo.add(new LatLng(11.43365423405033, 48.76677768792014));
+        List<LatLng> gpsCooKal = new ArrayList<LatLng>();
+        gpsCooKal.add(new LatLng(11.43365423405033, 48.76677768792014));
 		
 		List<GraphViewData> listAccX = oCSVR.listAccX;
     	List<GraphViewData> listAccY = oCSVR.listAccY;
@@ -29,7 +31,7 @@ public class testappforOpenCSV {
     	
     	try {
 			CSVReport.createCSVReport(listAccX, listAccY, listAccZ, listrpm1, listrpm2,
-					listrpm3, listrpm4, listAngleX, listAngleY, listAngleZ, gpsCoo);
+					listrpm3, listrpm4, listAngleX, listAngleY, listAngleZ, gpsCoo, gpsCooKal);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

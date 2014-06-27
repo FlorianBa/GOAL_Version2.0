@@ -71,7 +71,7 @@ public class Tab_all extends Fragment {
 
 		if(mCallback.getIsCSVReportSelected() == false){
 			/*
-			 *  No CSV-Report is selected and the normal Measurement will start
+			 *  NO CSV-Report is selected and the normal Measurement will start
 			 */
 
 			if(((MainActivity)getActivity()).udpService != null){
@@ -140,8 +140,8 @@ public class Tab_all extends Fragment {
 			series_rpm_4.appendData(report.getAllGraphDatarpm4()[report.getAllGraphDatarpm4().length-1], scrollToEnd, graphDataBuffer);
 
 			if(((MainActivity)getActivity()).udpService != null){
-				double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
-				double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+				double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().longitude;
+				double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().latitude;
 
 				double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
 				double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
@@ -162,8 +162,8 @@ public class Tab_all extends Fragment {
 				if(isFragAlive){
 					if(((MainActivity)getActivity()).udpService != null) {
 						
-						double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
-						double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
+						double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().longitude;
+						double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().latitude;
 
 						double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
 						double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;

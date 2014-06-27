@@ -145,12 +145,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
             isRecPressed = true;
             udpService.clearSavingLists();
             udpService.setEnableSaving(true);
+            
+            //tests
+            //testappforKMLandCSV.createReports();
+            //testappforOpenCSV.openCSV();  
         }
         else{
             Toast.makeText(this, "Stop Saving", Toast.LENGTH_LONG).show();
             isRecPressed = false;
             udpService.setEnableSaving(false);
-            KMLReport.createKML(udpService.getAllLocationssaving());
+            KMLReport.createKML(udpService.getAllLocationssaving(), udpService.getAllLocationsKal());
             try {
                 CSVReport.createCSVReport(udpService.getListAccXsaving(),
                         udpService.getListAccYsaving(),
@@ -162,7 +166,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
                         udpService.getListAngleXsaving(),
                         udpService.getListAngleYsaving(),
                         udpService.getListAngleZsaving(),
-                        udpService.getAllLocationssaving());
+                        udpService.getAllLocationssaving(),
+                        udpService.getAllLocationsKalsaving());
             } catch (IOException e) {
                 e.printStackTrace();
             }

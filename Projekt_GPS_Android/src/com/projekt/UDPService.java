@@ -34,9 +34,6 @@ public class UDPService extends Service {
     private MainActivity linkToParent;
 
 
-
-
-
     // Arrays to store received data
     private  List<GraphView.GraphViewData> listAccX = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
     private  List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
@@ -49,6 +46,7 @@ public class UDPService extends Service {
     private  List<GraphView.GraphViewData> listAngleY = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
     private  List<GraphView.GraphViewData> listAngleZ = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
     private  List<LatLng> listLocations = new ArrayList<LatLng>();
+    private  List<LatLng> listLocationsKal = new ArrayList<LatLng>();
 
 
     //ArrrayLists for creating KML- and CSV- reports
@@ -63,16 +61,14 @@ public class UDPService extends Service {
     private  List<GraphView.GraphViewData> listAngleYsaving = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
     private  List<GraphView.GraphViewData> listAngleZsaving = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
     private  List<LatLng> listLocationssaving = new ArrayList<LatLng>();
+    private  List<LatLng> listLocationsKalsaving = new ArrayList<LatLng>();
 
 
     //flag to enable saving in saving lists
     private static boolean enableSaving = false;
 
     // received data counter
-   private  double timestamp = 0;
-
-
-
+    private  double timestamp = 0;
 
 
     // Binder method for connecting class to MainActivity
@@ -100,7 +96,6 @@ public class UDPService extends Service {
 
 
     // Starting point of Service
-
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
@@ -114,7 +109,6 @@ public class UDPService extends Service {
 
 
     // Deinitializer
-
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
@@ -130,7 +124,6 @@ public class UDPService extends Service {
 
 
     // Start Service Call
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
@@ -143,7 +136,6 @@ public class UDPService extends Service {
 
 
     // Class to start working Thread and bind to Logic
-
     class connectSocket implements Runnable {
         @Override
         public void run() {
@@ -153,33 +145,25 @@ public class UDPService extends Service {
                 DatagramPacket p = new DatagramPacket(buffer, buffer.length);
                 socketUDP = new DatagramSocket(SERVERPORT);
 
-
                 while (!Thread.currentThread().isInterrupted()) {
-
                     try {
                       //  Log.d("UDP", "try to receive data");
                         socketUDP.receive(p);
                       processReceivedData(p);
 
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
-
-
             } catch (IOException e) {
                 Log.d("UDP" , "run exception");
                 e.printStackTrace();
-
             }
         }
     }
 
 
     // Callback for receiving packages over udp
-
     private void processReceivedData(DatagramPacket p) {
     	
         timestamp = System.currentTimeMillis() - startTime;
@@ -210,7 +194,7 @@ public class UDPService extends Service {
 //                        Log.d("UDP","" + value + "at:" + timestamp);
 //                        GraphView.GraphViewData graphData = new GraphView.GraphViewData(timestamp, value);
 //                        listAccX.add(graphData);
-                       listAccX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) *0.005)) ;
+                        listAccX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) *0.005)) ;
                         listAccY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false) * 0.005));
                         listAccZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 16, 17, false) * 0.005));
 
@@ -282,15 +266,13 @@ public class UDPService extends Service {
                         //SG_ Y_GYRO : 16|16@1- (0.02,0) [-327.68|327.68] "grad/s" Vector__XXX
                         //SG_ X_GYRO : 0|16@1- (0.02,0) [-327.68|327.68] "grad/s" Vector__XXX
 
-                       listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
+                        listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 0.02));
                         if(enableSaving) {
                            listAngleZsaving.add(getCurrentGraphDataAngleZ());
                         }
                         break;
                 }
             //}
-
-
         } catch (Exception e) {
 
         }
@@ -298,25 +280,19 @@ public class UDPService extends Service {
 
 
     // static function: processing byte values of CAN frames
-
-
     public static Double getValueFromBytes(byte[] buffer, int startByte, int endByte, Boolean byteIsUnsigned) {
 
         Double result = new Double(0.0);
-
 
         for (int i = startByte; i <= endByte; i++) {
             if (!byteIsUnsigned && i == endByte) {
                 result += new Double(buffer[i])
                         * Math.pow(2, 8 * (i - startByte));
-
             } else {
                 result += new Double(unsignedByteToInt(buffer[i]))
                         * Math.pow(2, 8 * (i - startByte));
-
             }
         }
-
         return result;
     }
 
@@ -327,7 +303,6 @@ public class UDPService extends Service {
 
 
     //  Link methods for retrieving stored values
-
 
     public GraphView.GraphViewData getCurrentGraphDataAccX() {
 
@@ -407,6 +382,13 @@ public class UDPService extends Service {
         else
             return new LatLng(0.0, 0.0);
     }
+    
+    public LatLng getCurrentLocationKal() {
+        if (!listLocationsKal.isEmpty())
+            return listLocationsKal.get(listLocationsKal.size() - 1);
+        else
+            return new LatLng(0.0, 0.0);
+    }
 
     public List<LatLng> getAllLocations() {
         if (!listLocations.isEmpty())
@@ -414,6 +396,15 @@ public class UDPService extends Service {
         else {
             listLocations.add(new LatLng(0.0, 0.0));
             return listLocations;
+        }
+    }
+    
+    public List<LatLng> getAllLocationsKal() {
+        if (!listLocationsKal.isEmpty())
+            return listLocationsKal;
+        else {
+            listLocationsKal.add(new LatLng(0.0, 0.0));
+            return listLocationsKal;
         }
     }
 
@@ -587,6 +578,13 @@ public class UDPService extends Service {
         }
         return listLocationssaving;
     }
+    
+    public List<LatLng> getAllLocationsKalsaving() {
+        if (listLocationsKalsaving.isEmpty()){
+            listLocationsKalsaving.add(new LatLng(0.0, 0.0));
+        }
+        return listLocationsKalsaving;
+    }
 
     //set saving state
     public void setEnableSaving(boolean state) {
@@ -607,6 +605,7 @@ public class UDPService extends Service {
         listAngleYsaving.clear();
         listAngleZsaving.clear();
         listLocationssaving.clear();
+        listLocationsKalsaving.clear();
     }
 
 }

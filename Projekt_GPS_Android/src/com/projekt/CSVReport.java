@@ -11,18 +11,41 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 
 import android.os.Environment;
 
+/**
+ * class for creating CSV-reports
+ * 
+ * @author Aschenauer Dominic
+ */
 public class CSVReport extends Report {
-
+	
+	/**
+	 * method to create CSV-file
+	 * @param listAccX
+	 * @param listAccY
+	 * @param listAccZ
+	 * @param listrpm1
+	 * @param listrpm2
+	 * @param listrpm3
+	 * @param listrpm4
+	 * @param listAngleX
+	 * @param listAngleY
+	 * @param listAngleZ
+	 * @param listCoo
+	 * @param listCooKal
+	 * @throws IOException
+	 */
 	public static void createCSVReport(List<GraphViewData> listAccX,
 			List<GraphViewData> listAccY, List<GraphViewData> listAccZ,
 			List<GraphViewData> listrpm1, List<GraphViewData> listrpm2,
 			List<GraphViewData> listrpm3, List<GraphViewData> listrpm4,
 			List<GraphViewData> listAngleX, List<GraphViewData> listAngleY,
-			List<GraphViewData> listAngleZ, List<LatLng> listCoo)
+			List<GraphViewData> listAngleZ, List<LatLng> listCoo, List<LatLng> listCooKal)
 			throws IOException {
 
 		FileWriter fw;
-
+		
+		// generate folder
+		// saving file
 		if (!extStorageState) {
 			File csvFolderInt = new File(
 					Environment.getExternalStorageDirectory() + folderPath);
@@ -41,32 +64,40 @@ public class CSVReport extends Report {
 		}
 
 		PrintWriter out = new PrintWriter(fw);
-
-		out.print("time");
+		
+		// write all data
+		out.print("time for acc");
 		out.print(",");
 		for (GraphViewData data : listAccX) {
 			out.print(data.getX());
 			out.print(",");
 		}
 		out.println("");
-		out.print("Acc_X");
+		out.print("acc_X");
 		out.print(",");
 		for (GraphViewData data : listAccX) {
 			out.print(data.getY());
 			out.print(",");
 		}
 		out.println("");
-		out.print("Acc_Y");
+		out.print("acc_Y");
 		out.print(",");
 		for (GraphViewData data : listAccY) {
 			out.print(data.getY());
 			out.print(",");
 		}
 		out.println("");
-		out.print("Acc_Z");
+		out.print("acc_Z");
 		out.print(",");
 		for (GraphViewData data : listAccZ) {
 			out.print(data.getY());
+			out.print(",");
+		}
+		out.println("");
+		out.print("time for rpm");
+		out.print(",");
+		for (GraphViewData data : listrpm1) {
+			out.print(data.getX());
 			out.print(",");
 		}
 		out.println("");
@@ -98,6 +129,13 @@ public class CSVReport extends Report {
 			out.print(",");
 		}
 		out.println("");
+		out.print("time for angle_X_Y");
+		out.print(",");
+		for (GraphViewData data : listAngleX) {
+			out.print(data.getX());
+			out.print(",");
+		}
+		out.println("");
 		out.print("angle_X");
 		out.print(",");
 		for (GraphViewData data : listAngleX) {
@@ -109,6 +147,13 @@ public class CSVReport extends Report {
 		out.print(",");
 		for (GraphViewData data : listAngleY) {
 			out.print(data.getY());
+			out.print(",");
+		}
+		out.println("");
+		out.print("time for angle_Z");
+		out.print(",");
+		for (GraphViewData data : listAngleZ) {
+			out.print(data.getX());
 			out.print(",");
 		}
 		out.println("");
@@ -129,6 +174,20 @@ public class CSVReport extends Report {
 		out.print("longitude");
 		out.print(",");
 		for (LatLng data : listCoo) {
+			out.print(data.longitude);
+			out.print(",");
+		}
+		out.println("");
+		out.print("latitude Kalman");
+		out.print(",");
+		for (LatLng data : listCooKal) {
+			out.print(data.latitude);
+			out.print(",");
+		}
+		out.println("");
+		out.print("longitude Kalman");
+		out.print(",");
+		for (LatLng data : listCooKal) {
 			out.print(data.longitude);
 			out.print(",");
 		}

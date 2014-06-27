@@ -21,8 +21,18 @@ import android.os.Environment;
 import com.google.android.gms.maps.model.LatLng;
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
+/**
+ * class for creating KML-reports
+ * 
+ * @author Aschenauer Dominic
+ */
 public class KMLReport extends Report {
-
+	
+	/**
+	 * method to transform GPS coordinates to a string
+	 * @param gpsCoo
+	 * @return
+	 */
 	private static String transformCoordinatestoString(List<LatLng> gpsCoo) {
 		String result = "\n";
 		if (!gpsCoo.isEmpty()) {
@@ -34,7 +44,12 @@ public class KMLReport extends Report {
 			return "";
 		}
 	}
-
+	
+	/**
+	 * method to getting the start-coordinates of the gps-route
+	 * @param gpsCoo
+	 * @return
+	 */
 	private static String getStartingCoordinates(List<LatLng> gpsCoo) {
 		if (!gpsCoo.isEmpty()) {
 			return "" + gpsCoo.get(0).latitude + "," + gpsCoo.get(0).longitude;
@@ -42,7 +57,12 @@ public class KMLReport extends Report {
 			return "";
 		}
 	}
-
+	
+	/**
+	 * method to getting the end-coordinates of the gps-route
+	 * @param gpsCoo
+	 * @return
+	 */
 	private static String getEndCoordinates(List<LatLng> gpsCoo) {
 		if (!gpsCoo.isEmpty()) {
 			return "" + gpsCoo.get(gpsCoo.size() - 1).latitude + ","
@@ -51,8 +71,13 @@ public class KMLReport extends Report {
 			return "";
 		}
 	}
-
-	public static void createKML(List<LatLng> gpsCoo) {
+	
+	/**
+	 * method to create the KML-file
+	 * @param gpsCoo
+	 * @param gpsCooKal
+	 */
+	public static void createKML(List<LatLng> gpsCoo, List<LatLng> gpsCooKal) {
 
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -62,18 +87,20 @@ public class KMLReport extends Report {
 
 			Element rootElement = doc.createElement("kml");
 			doc.appendChild(rootElement);
-
+			
+			// document node
 			Element docNode = doc.createElement("Document");
 			rootElement.appendChild(docNode);
 
 			// name
 			Element name = doc.createElement("name");
-			name.appendChild(doc.createTextNode("Name123"));
+			name.appendChild(doc.createTextNode("GPS"));
 			docNode.appendChild(name);
 
 			// description
 			Element description = doc.createElement("description");
-			description.appendChild(doc.createTextNode("Beschreibung123"));
+			description.appendChild(doc
+					.createTextNode("GPS Koordinaten ohne Kalmanfilter"));
 			docNode.appendChild(description);
 
 			// style
@@ -162,6 +189,104 @@ public class KMLReport extends Report {
 					.transformCoordinatestoString(gpsCoo)));
 			linestring.appendChild(coordinates3);
 
+			// Kalman GPS
+			// name
+			Element nameKal = doc.createElement("name");
+			nameKal.appendChild(doc.createTextNode("GPS Kalmann"));
+			docNode.appendChild(nameKal);
+
+			// description
+			Element descriptionKal = doc.createElement("description");
+			descriptionKal.appendChild(doc
+					.createTextNode("GPS Koordinaten mit Kalmanfilter"));
+			docNode.appendChild(descriptionKal);
+
+			// style
+			Element styleKal = doc.createElement("Style");
+			styleKal.setAttribute("id", "green");
+			docNode.appendChild(styleKal);
+
+			// lineStyle
+			Element lineStyleKal = doc.createElement("LineStyle");
+			styleKal.appendChild(lineStyleKal);
+
+			// color
+			Element colorKal = doc.createElement("color");
+			colorKal.appendChild(doc.createTextNode("ff00ff00"));
+			lineStyleKal.appendChild(colorKal);
+
+			// width
+			Element widthKal = doc.createElement("width");
+			widthKal.appendChild(doc.createTextNode("3"));
+			lineStyleKal.appendChild(widthKal);
+
+			// placemark for starting point
+			Element placemark1Kal = doc.createElement("Placemark");
+			docNode.appendChild(placemark1Kal);
+
+			// name
+			Element nameStartKal = doc.createElement("name");
+			nameStartKal.appendChild(doc.createTextNode("starting point"));
+			placemark1Kal.appendChild(nameStartKal);
+
+			// styleUr
+			Element styleUrl1Kal = doc.createElement("styleUrl");
+			styleUrl1Kal.appendChild(doc.createTextNode("#UrlStartPoint"));
+			placemark1Kal.appendChild(styleUrl1Kal);
+
+			// starting point
+			Element startPointKal = doc.createElement("Point");
+			placemark1Kal.appendChild(startPointKal);
+
+			// coordinates for starting point
+			Element coordinates1Kal = doc.createElement("coordinates");
+			coordinates1Kal.appendChild(doc.createTextNode(KMLReport
+					.getStartingCoordinates(gpsCooKal)));
+			startPointKal.appendChild(coordinates1Kal);
+
+			// placemark for endpoint
+			Element placemark2Kal = doc.createElement("Placemark");
+			docNode.appendChild(placemark2Kal);
+
+			// name
+			Element nameEndKal = doc.createElement("name");
+			nameEndKal.appendChild(doc.createTextNode("endpoint"));
+			placemark2Kal.appendChild(nameEndKal);
+
+			// styleUr
+			Element styleUrl2Kal = doc.createElement("styleUrl");
+			styleUrl2Kal.appendChild(doc.createTextNode("#UrlEndPoint"));
+			placemark2Kal.appendChild(styleUrl2Kal);
+
+			// endpoint
+			Element endpointKal = doc.createElement("Point");
+			placemark2Kal.appendChild(endpointKal);
+
+			// coordinates for endpoint
+			Element coordinates2Kal = doc.createElement("coordinates");
+			coordinates2Kal.appendChild(doc.createTextNode(KMLReport
+					.getEndCoordinates(gpsCooKal)));
+			endpointKal.appendChild(coordinates2Kal);
+
+			// placemark for lineString
+			Element placemark3Kal = doc.createElement("Placemark");
+			docNode.appendChild(placemark3Kal);
+
+			// styleUr
+			Element styleUrlKal = doc.createElement("styleUrl");
+			styleUrlKal.appendChild(doc.createTextNode("#green"));
+			placemark3Kal.appendChild(styleUrlKal);
+
+			// LineString
+			Element linestringKal = doc.createElement("LineString");
+			placemark3Kal.appendChild(linestringKal);
+
+			// coordinates for route
+			Element coordinates3Kal = doc.createElement("coordinates");
+			coordinates3Kal.appendChild(doc.createTextNode(KMLReport
+					.transformCoordinatestoString(gpsCooKal)));
+			linestringKal.appendChild(coordinates3Kal);
+
 			// transform to xml
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
@@ -170,7 +295,9 @@ public class KMLReport extends Report {
 			transformer.setOutputProperty(
 					OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
 			DOMSource source = new DOMSource(doc);
-
+			
+			// create folder
+			// save KML-file
 			if (!extStorageState) {
 				File csvFolderInt = new File(
 						Environment.getExternalStorageDirectory() + folderPath);
