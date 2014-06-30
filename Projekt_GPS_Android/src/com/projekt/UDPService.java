@@ -224,12 +224,13 @@ public class UDPService extends Service {
 
                       break;
                         
-//                    case 21:
-//                    	timestamp = listAngleZ.size();
-//                    	listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 13, 14, false) * (180/Math.PI)));
-//                        if(enableSaving) {
-//                            listAngleZsaving.add(getCurrentGraphDataAngleZ());
-//                        }
+                    case 21:
+                    	// Kalman processed location point
+                    
+                        listLocationsKal.add(new LatLng( (getValueFromBytes(buffer, 12, 15, false)*1E-006) , (getValueFromBytes(buffer, 16, 19, false) *1E-006) ));
+                        if(enableSaving){
+                            listLocationsKalsaving.add(listLocationsKal.getCurrentLocationKal());
+                        }
                     case 18:
 
 //                        SG_ Raddrehzahl_vr : 48|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
