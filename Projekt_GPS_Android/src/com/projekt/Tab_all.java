@@ -1,7 +1,6 @@
 package com.projekt;
 
 
-import com.google.android.gms.maps.model.LatLng;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.CustomLabelFormatter;
@@ -97,7 +96,7 @@ public class Tab_all extends Fragment {
 			appendGraphData(R.id.graph_all_acc);
 			appendGraphData(R.id.graph_all_angle);
 			appendGraphData(R.id.graph_all_rpm);
-			
+
 			refreshGPSPositions();
 		}
 		else{
@@ -139,16 +138,10 @@ public class Tab_all extends Fragment {
 			series_rpm_3.appendData(report.getAllGraphDatarpm3()[report.getAllGraphDatarpm3().length-1], scrollToEnd, graphDataBuffer);
 			series_rpm_4.appendData(report.getAllGraphDatarpm4()[report.getAllGraphDatarpm4().length-1], scrollToEnd, graphDataBuffer);
 
-			if(((MainActivity)getActivity()).udpService != null){
-				double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().longitude;
-				double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().latitude;
+			// No GPS Data will be shown when CSV-File is selected
+			kalmanGPSView.setText("");
+			normalGPSView.setText("");
 
-				double normalLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().longitude;
-				double normalLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocation().latitude;
-
-				kalmanGPSView.setText("Kalman GPS:\nLongitude = " + kalmanLongitude + "\nLatitude = " + kalmanLatitude);
-				normalGPSView.setText("Normal GPS:\nLongitude = " + normalLongitude + "\nLatitude = " + normalLatitude);
-			}
 		}
 	}
 
@@ -161,7 +154,7 @@ public class Tab_all extends Fragment {
 			public void run() {
 				if(isFragAlive){
 					if(((MainActivity)getActivity()).udpService != null) {
-						
+
 						double kalmanLongitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().longitude;
 						double kalmanLatitude = ((MainActivity)getActivity()).udpService.getCurrentLocationKal().latitude;
 

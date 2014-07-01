@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -14,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -36,6 +38,7 @@ public class FileChooserActivity extends ListActivity {
 	private String currentParent = root;
 	private Context con = this;
 	private ProgressDialog progress;
+	private ActionBar actionbar;
 
 	/** Called when the activity is first created. */
 
@@ -45,6 +48,13 @@ public class FileChooserActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_file_chooser);
 
+		actionbar = getActionBar();
+		
+		// enables Back-Button in the ActionBar
+		actionbar.setDisplayHomeAsUpEnabled(true);
+		actionbar.setHomeButtonEnabled(true);
+		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+		
 		progress = new ProgressDialog(this);
 
 		myPath = (TextView)findViewById(R.id.path);
@@ -216,5 +226,16 @@ public class FileChooserActivity extends ListActivity {
 	protected void onStop(){
 		super.onStop();
 		loadingProgress(false);
+	}
+	
+	//Listener for the Back-Button in the ActionBar
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

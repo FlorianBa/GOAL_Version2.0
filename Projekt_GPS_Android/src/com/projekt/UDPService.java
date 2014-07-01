@@ -213,8 +213,8 @@ public class UDPService extends Service {
 //                      SG_ RollAngle : 16|16@1- (1,0) [0|0] "grad" Vector__XXX
 //                      SG_ PitchAngle : 0|16@1- (1,0) [0|0] "grad" Vector__XXX
                       
-                      listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) * 1.0));
-                      listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false) * 1.0));
+                      listAngleX.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false) * 1.0));
+                      listAngleY.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false) * 1.0));
                       //listAngleZ.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 17, 18, false) * 1.0));
                         if(enableSaving){
                             listAngleXsaving.add(getCurrentGraphDataAngleX());
@@ -229,7 +229,7 @@ public class UDPService extends Service {
                     
                         listLocationsKal.add(new LatLng( (getValueFromBytes(buffer, 12, 15, false)*1E-006) , (getValueFromBytes(buffer, 16, 19, false) *1E-006) ));
                         if(enableSaving){
-                            listLocationsKalsaving.add(listLocationsKal.getCurrentLocationKal());
+                            listLocationsKalsaving.add(getCurrentLocationKal());
                         }
                     case 18:
 
