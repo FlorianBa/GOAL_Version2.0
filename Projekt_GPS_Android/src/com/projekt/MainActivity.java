@@ -138,6 +138,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, T
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
+    protected void onDestroy(){
+    	super.onDestroy();
+    	udpService.stopSelf();
+    }
+    
     @Override
     public void onCheckedChanged(CompoundButton button, boolean isChecked) {
         if(isChecked){
