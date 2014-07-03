@@ -49,12 +49,12 @@ public class FileChooserActivity extends ListActivity {
 		setContentView(R.layout.activity_file_chooser);
 
 		actionbar = getActionBar();
-		
+
 		// enables Back-Button in the ActionBar
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setHomeButtonEnabled(true);
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
-		
+
 		progress = new ProgressDialog(this);
 
 		myPath = (TextView)findViewById(R.id.path);
@@ -221,19 +221,26 @@ public class FileChooserActivity extends ListActivity {
 		else
 			progress.dismiss();
 	}
-	
-	
+
+
 	protected void onStop(){
 		super.onStop();
 		loadingProgress(false);
 	}
-	
+
 	//Listener for the Back-Button in the ActionBar
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.finish();
+			// Go back to Parent Folder
+			if(!currentParent.equals(new File(root).getParent())){
+				getDir(currentParent);
+			}
+			// If no Parent available, finish FileChooser
+			else{
+				this.finish();
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
