@@ -1,4 +1,4 @@
-package com.projekt;
+ package com.projekt;
 
 import java.io.File;
 import java.util.List;
@@ -23,11 +23,11 @@ import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
 /**
  * class for creating KML-reports
- * 
+ *
  * @author Aschenauer Dominic
  */
 public class KMLReport extends Report {
-	
+
 	/**
 	 * method to transform GPS coordinates to a string
 	 * @param gpsCoo
@@ -37,14 +37,14 @@ public class KMLReport extends Report {
 		String result = "\n";
 		if (!gpsCoo.isEmpty()) {
 			for (LatLng LtLg : gpsCoo) {
-				result = result + LtLg.latitude + "," + LtLg.longitude + "\n";
+				result = result + LtLg.longitude + "," + LtLg.latitude + "\n";
 			}
 			return result;
 		} else {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * method to getting the start-coordinates of the gps-route
 	 * @param gpsCoo
@@ -52,12 +52,12 @@ public class KMLReport extends Report {
 	 */
 	private static String getStartingCoordinates(List<LatLng> gpsCoo) {
 		if (!gpsCoo.isEmpty()) {
-			return "" + gpsCoo.get(0).latitude + "," + gpsCoo.get(0).longitude;
+			return "" + gpsCoo.get(0).longitude + "," + gpsCoo.get(0).latitude;
 		} else {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * method to getting the end-coordinates of the gps-route
 	 * @param gpsCoo
@@ -65,13 +65,13 @@ public class KMLReport extends Report {
 	 */
 	private static String getEndCoordinates(List<LatLng> gpsCoo) {
 		if (!gpsCoo.isEmpty()) {
-			return "" + gpsCoo.get(gpsCoo.size() - 1).latitude + ","
-					+ gpsCoo.get(gpsCoo.size() - 1).longitude;
+			return "" + gpsCoo.get(gpsCoo.size() - 1).longitude + ","
+					+ gpsCoo.get(gpsCoo.size() - 1).latitude;
 		} else {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * method to create the KML-file
 	 * @param gpsCoo
@@ -87,7 +87,7 @@ public class KMLReport extends Report {
 
 			Element rootElement = doc.createElement("kml");
 			doc.appendChild(rootElement);
-			
+
 			// document node
 			Element docNode = doc.createElement("Document");
 			rootElement.appendChild(docNode);
@@ -295,7 +295,7 @@ public class KMLReport extends Report {
 			transformer.setOutputProperty(
 					OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
 			DOMSource source = new DOMSource(doc);
-			
+
 			// create folder
 			// save KML-file
 			if (!extStorageState) {
