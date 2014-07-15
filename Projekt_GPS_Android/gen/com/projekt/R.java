@@ -222,7 +222,7 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f020017;
         public static final int gps_symbol3=0x7f020018;
         public static final int hintergrund=0x7f020019;
-        public static final int hintergrund_thi=0x7f02001a;
+        public static final int hintergrund3=0x7f02001a;
         public static final int ic_action_previous_item=0x7f02001b;
         public static final int ic_action_search=0x7f02001c;
         public static final int ic_launcher=0x7f02001d;
@@ -236,8 +236,9 @@ containing a value of this type.
         public static final int thi_logo=0x7f020025;
         public static final int thi_logo2=0x7f020026;
         public static final int thi_logo_gross=0x7f020027;
-        public static final int thi_schriftzug=0x7f020028;
-        public static final int toggle_color=0x7f020029;
+        public static final int thi_logo_transparent=0x7f020028;
+        public static final int thi_schriftzug=0x7f020029;
+        public static final int toggle_color=0x7f02002a;
     }
     public static final class id {
         public static final int action_settings=0x7f060023;

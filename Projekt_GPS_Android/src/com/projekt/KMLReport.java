@@ -35,7 +35,7 @@ public class KMLReport extends Report {
 	 */
 	private static String transformCoordinatestoString(List<LatLng> gpsCoo) {
 		String result = "\n";
-		if (!gpsCoo.isEmpty()) {
+		if (!gpsCoo.isEmpty() && gpsCoo!= null) { // != null wurde noch hinzugefügt 3 mal
 			for (LatLng LtLg : gpsCoo) {
 				result = result + LtLg.longitude + "," + LtLg.latitude + "\n";
 			}
@@ -51,7 +51,7 @@ public class KMLReport extends Report {
 	 * @return
 	 */
 	private static String getStartingCoordinates(List<LatLng> gpsCoo) {
-		if (!gpsCoo.isEmpty()) {
+		if (!gpsCoo.isEmpty()&& gpsCoo!= null) {
 			return "" + gpsCoo.get(0).longitude + "," + gpsCoo.get(0).latitude;
 		} else {
 			return "";
@@ -64,7 +64,7 @@ public class KMLReport extends Report {
 	 * @return
 	 */
 	private static String getEndCoordinates(List<LatLng> gpsCoo) {
-		if (!gpsCoo.isEmpty()) {
+		if (!gpsCoo.isEmpty()&& gpsCoo!= null) {
 			return "" + gpsCoo.get(gpsCoo.size() - 1).longitude + ","
 					+ gpsCoo.get(gpsCoo.size() - 1).latitude;
 		} else {

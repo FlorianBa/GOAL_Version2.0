@@ -19,6 +19,7 @@ import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by matthiasuttendorfer on 5/22/14.
@@ -37,33 +38,35 @@ public class UDPService extends Service {
 
 
 	// Arrays to store received data
-	private  List<GraphView.GraphViewData> listAccX = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
-	private  List<GraphView.GraphViewData> listAccY = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
-	private  List<GraphView.GraphViewData> listAccZ = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
-	private  List<GraphView.GraphViewData> listrpm1 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
-	private  List<GraphView.GraphViewData> listrpm2 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
-	private  List<GraphView.GraphViewData> listrpm3 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
-	private  List<GraphView.GraphViewData> listrpm4 = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
-	private  List<GraphView.GraphViewData> listAngleX = new ArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
-	private  List<GraphView.GraphViewData> listAngleY = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
-	private  List<GraphView.GraphViewData> listAngleZ = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
-	private  List<LatLng> listLocations = new ArrayList<LatLng>();
-	private  List<LatLng> listLocationsKal = new ArrayList<LatLng>();
+	private  List<GraphView.GraphViewData> listAccX = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
+	private  List<GraphView.GraphViewData> listAccY = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
+	private  List<GraphView.GraphViewData> listAccZ = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
+	private  List<GraphView.GraphViewData> listrpm1 = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
+	private  List<GraphView.GraphViewData> listrpm2 = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
+	private  List<GraphView.GraphViewData> listrpm3 = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
+	private  List<GraphView.GraphViewData> listrpm4 = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
+	private  List<GraphView.GraphViewData> listAngleX = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
+	private  List<GraphView.GraphViewData> listAngleY = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
+	private  List<GraphView.GraphViewData> listAngleZ = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
+	private  List<LatLng> listLocations = new CopyOnWriteArrayList<LatLng>();
+	private  List<LatLng> listLocationsKal = new CopyOnWriteArrayList<LatLng>();
 
 
 	//ArrrayLists for creating KML- and CSV- reports
-	private  List<GraphView.GraphViewData> listAccXsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
-	private  List<GraphView.GraphViewData> listAccYsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
-	private  List<GraphView.GraphViewData> listAccZsaving = new ArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
-	private  List<GraphView.GraphViewData> listrpm1saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
-	private  List<GraphView.GraphViewData> listrpm2saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
-	private  List<GraphView.GraphViewData> listrpm3saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
-	private  List<GraphView.GraphViewData> listrpm4saving = new ArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
-	private  List<GraphView.GraphViewData> listAngleXsaving = new ArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
-	private  List<GraphView.GraphViewData> listAngleYsaving = new ArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
-	private  List<GraphView.GraphViewData> listAngleZsaving = new ArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
-	private  List<LatLng> listLocationssaving = new ArrayList<LatLng>();
-	private  List<LatLng> listLocationsKalsaving = new ArrayList<LatLng>();
+	private  List<GraphView.GraphViewData> listAccXsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values x-component
+	private  List<GraphView.GraphViewData> listAccYsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values y-component
+	private  List<GraphView.GraphViewData> listAccZsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of acceleration values z-component
+	private  List<GraphView.GraphViewData> listrpm1saving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left front wheel
+	private  List<GraphView.GraphViewData> listrpm2saving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right front wheel
+	private  List<GraphView.GraphViewData> listrpm3saving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value left rear wheel
+	private  List<GraphView.GraphViewData> listrpm4saving = new CopyOnWriteArrayList<GraphView.GraphViewData>(); // storage of rounds per minute value right rear wheel
+	private  List<GraphView.GraphViewData> listAngleXsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of roll rate of vehicle
+	private  List<GraphView.GraphViewData> listAngleYsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of yaw rate of vehicle
+	private  List<GraphView.GraphViewData> listAngleZsaving = new CopyOnWriteArrayList<GraphView.GraphViewData>();  // storage of pitch rate of vehicle
+	private List<LatLng> listLocationssaving = new CopyOnWriteArrayList<LatLng>();
+	private List<LatLng> listLocationsKalsaving = new CopyOnWriteArrayList<LatLng>();
+	//private  List<LatLng> listLocationssaving = new ArrayList<LatLng>();
+	//private  List<LatLng> listLocationsKalsaving = new ArrayList<LatLng>();
 
 
 	//flag to enable saving in saving lists
@@ -162,8 +165,9 @@ public class UDPService extends Service {
 				socketUDP = new DatagramSocket(SERVERPORT);
 				while (!Thread.currentThread().isInterrupted()) {
 					try {
-						Log.d("UDP", "try to receive data");
-						socketUDP.receive(p);
+						//Log.d("UDP", "try to receive data");
+						if(socketUDP != null)
+							socketUDP.receive(p);
 						
 						// Measurement should start by 0 seconds
 						if(isFirstTime){
@@ -173,7 +177,8 @@ public class UDPService extends Service {
 						
 						processReceivedData(p);
 
-					} catch (IOException e) {
+					} catch (Exception e) {
+						Log.e("UDP", "Exception in UDP Service");
 						e.printStackTrace();
 					}
 				}
@@ -262,10 +267,10 @@ public class UDPService extends Service {
 				//                        SG_ Raddrehzahl_hr : 16|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 				//                        SG_ Raddrehzahl_hl : 0|16@1+ (0.005,0) [0|327.675] "1/s" Vector__XXX
 
-				listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, true)*0.005));
-				listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, true)*0.005));
-				listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 16, 17, true)*0.005));
-				listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 18, 19, true)*0.005));
+				listrpm1.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 12, 13, false)*0.005));
+				listrpm2.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 14, 15, false)*0.005));
+				listrpm3.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 16, 17, false)*0.005));
+				listrpm4.add(new GraphView.GraphViewData(timestamp, getValueFromBytes(buffer, 18, 19, false)*0.005));
 				//add current graph datas to savinglists
 				if(enableSaving){
 					listrpm1saving.add(getCurrentGraphDatarpm1());
@@ -615,7 +620,10 @@ public class UDPService extends Service {
 	public void setEnableSaving(boolean state) {
 		enableSaving = state;
 	}
-
+	
+	public boolean getSavingState(){
+		return enableSaving;
+	}
 
 	//clear all saving lists, using for KML- and CSV- reports
 	public void clearSavingLists() {
