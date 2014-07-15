@@ -155,7 +155,7 @@ public class Tab_gps  extends Fragment {
 
 	@Override
 	public void onResume() {
-		Toast.makeText(getActivity(), "Onresume :)", Toast.LENGTH_SHORT).show();
+		
 		if(firsttime)
 		{
 			onPause();
