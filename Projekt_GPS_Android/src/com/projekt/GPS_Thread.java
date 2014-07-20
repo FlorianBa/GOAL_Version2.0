@@ -13,14 +13,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 public class GPS_Thread extends Tab_gps implements Runnable {
 
 
-	// Konfiguration Pfad
+	// Configuration of the paths
 	PolylineOptions mydrawer_opt_1 = new PolylineOptions().color(Color.RED);
 	PolylineOptions mydrawer_opt_2 = new PolylineOptions().color(Color.GREEN);
 	PolylineOptions mydrawer_opt_3 = new PolylineOptions().color(Color.YELLOW);
 	PolylineOptions mydrawer_opt_4 = new PolylineOptions().color(Color.BLACK);
 	PolylineOptions mydrawer_opt_5 = new PolylineOptions().color(Color.BLUE);
 
-	private int path_state=1; // 1 fÃ¼r die erste messung usw. 
+	private int path_state=1; //number of state which is drawn.
 	private boolean isRecPressed;
 	private boolean measurement_end_flag=false;
 
@@ -30,11 +30,12 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 
 
 		while (true) {
-			
+			// True if we start a recording
 			isRecPressed = Tab_gps.mCallback.getRecState();
-			//FÃ¼ge die Simulationsdaten dem Pfad hinzu
+		
 			if (isRecPressed)
 			{
+				// case 1 for the first recording. case 2 for the second etc.
 				switch(path_state)
 				{
 				case 1:
@@ -62,9 +63,8 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 
 			}
 			else
-			{	//dieser Flag stellt sicher, dass eine Messung gestartet und beendet wurde
-				//Dann wird path_state inkrementiert und wenn erneut gemessen wird, wird der Pfad in 
-				//einer anderen Farbe(andere CircleOption) markiert
+			{	//this flag ensures that a measurement is started and stopped
+				//the next path should be in an another color!
 				if(measurement_end_flag)
 				{
 					path_state++;
@@ -84,7 +84,7 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 			Tab_gps.handler.post(new Runnable() {
 				@Override
 				public void run() {
-					// FÃ¼ge unseren pfad maps hinzu
+					// add path to the map
 					if(isRecPressed)
 						switch(path_state)
 						{
@@ -104,14 +104,14 @@ public class GPS_Thread extends Tab_gps implements Runnable {
 							Tab_gps.map.addPolyline(mydrawer_opt_5);
 						}
 
-					// aktualiesiere die coordinaten des modellfahrzeugs
+					// update the coordinate of model car
 					try{
 					Tab_gps.modelcar.setCenter(getCurrentLocation());
 					}catch(Exception e)
 					{
 						System.out.println(e);
 					}
-					//Center the modelcar
+					//Center the modelcar if center_buton is pressed
 					try{
 					if (Tab_gps.center_flag)
 					{
