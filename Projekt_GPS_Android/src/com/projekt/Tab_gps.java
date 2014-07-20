@@ -56,6 +56,7 @@ public class Tab_gps  extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View v = inflater.inflate(R.layout.gps_frag, container, false);
+		//// center_button is the button to center the model car on the map
 		center_button = (ImageButton)v.findViewById(R.id.center_button);
 
 		center_button.setOnClickListener(new OnClickListener()
@@ -68,12 +69,15 @@ public class Tab_gps  extends Fragment {
 		});
 		// Gets the MapView from the XML layout and creates it
 
+		//// This initializes the Google Maps Android API so that its classes are ready to be used.
 		try {
 			MapsInitializer.initialize(getActivity());
 		} catch (Exception e) {
 			Log.e("Address Map", "Could not initialize google play", e);
 		}
 
+		//// Now we have to verify that Google Play services is installed and enabled on this device,
+		// and that the version installed on this device is not older than the one required by this client. 
 		switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()) )
 		{
 		case ConnectionResult.SUCCESS:
@@ -93,10 +97,8 @@ public class Tab_gps  extends Fragment {
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(((MainActivity)getActivity()).udpService.getCurrentLocation(), 17);
 				map.animateCamera(cameraUpdate);	//animate and zoom in the map  
 
-				firsttime=true; //test fÃ¼r speicherproblemlÃ¶sung (recbuttonstatus)
-
-				// Showing the current location in Google Map, erst wenn wir die gps daten erhalten!!!!
-				//googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+				firsttime=true; ////flag for recbuttonstate
+			
 
 			}
 			break;
@@ -109,7 +111,7 @@ public class Tab_gps  extends Fragment {
 		default: Toast.makeText(getActivity(), GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
 		}
 
-		//modelcar is an Circle. It shows our current location of the modelcar
+		//modelcar is an Circle Overlay. It represents the current location of the model car
 		//mylocation is the configuration for the Circle
 
 		CircleOptions mylocation = new CircleOptions().radius(3)
@@ -117,7 +119,7 @@ public class Tab_gps  extends Fragment {
 		modelcar=Tab_gps.map.addCircle(mylocation);
 
 
-		//		Thread to draw the current position and path if rec is pressed
+		//Thread to draw the current position and path if rec is pressed
 		if(t==null)
 		{
 			handler=new Handler();
